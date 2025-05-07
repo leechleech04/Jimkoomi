@@ -1,7 +1,7 @@
-import styled from 'styled-components/native';
+import StartScreen from './screens/StartScreen';
 
-const Container = styled.View``;
+const App = () => {
+  return <StartScreen />;
+};
 
-export default function App() {
-  return <Container></Container>;
-}
+export default App;

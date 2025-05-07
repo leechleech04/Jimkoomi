@@ -33,7 +33,8 @@
             "./assets/logo.png",
             "./assets/splash-logo.png",
             "./assets/adaptive-logo.png",
-            "./assets/favicon.png"
+            "./assets/favicon.png",
+            "./assets/text-logo.png"
           ]
         }
       ]

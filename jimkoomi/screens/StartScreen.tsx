@@ -1,0 +1,68 @@
+import styled from 'styled-components/native';
+import { colors } from '../colors';
+import { Dimensions } from 'react-native';
+
+const { width } = Dimensions.get('window');
+
+const Container = styled.SafeAreaView`
+  flex: 1;
+  background-color: ${colors.skyBlue};
+  align-items: center;
+`;
+
+const ContentBox = styled.View`
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+`;
+
+const LogoImage = styled.Image`
+  width: ${width / 3}px;
+  height: ${width / 3}px;
+  margin-bottom: 30px;
+`;
+
+const TextImage = styled.Image`
+  width: ${width / 2.5}px;
+  height: ${(width / 2.5) * (242 / 678)}px;
+  margin-bottom: 30px;
+`;
+
+const Comment = styled.Text`
+  font-size: 24px;
+  color: black;
+  font-weight: bold;
+`;
+
+const StartButton = styled.Pressable`
+  align-self: stretch;
+  background-color: ${colors.blue};
+  border-radius: 20px;
+  margin: 0 20px;
+  padding: 20px 0;
+`;
+
+const StartButtonText = styled.Text`
+  font-size: 24px;
+  color: black;
+  font-weight: bold;
+  text-align: center;
+`;
+
+const StartScreen = () => {
+  return (
+    <Container>
+      <ContentBox>
+        <LogoImage source={require('../assets/splash-logo.png')} />
+        <TextImage source={require('../assets/text-logo.png')} />
+        <Comment>여행 전, 짐 걱정 끝!</Comment>
+        <Comment>체크리스트로 완벽하게 준비하세요!</Comment>
+      </ContentBox>
+      <StartButton>
+        <StartButtonText>시작하기</StartButtonText>
+      </StartButton>
+    </Container>
+  );
+};
+
+export default StartScreen;

@@ -49,14 +49,27 @@ const DateInput = styled.TextInput`
   margin-bottom: 20px;
 `;
 
-const StartButton = styled.Pressable`
+const ButtonBox = styled.View`
   align-self: stretch;
-  background-color: ${colors.blue};
+  flex-direction: row;
+`;
+
+const Button = styled.Pressable`
+  flex-grow: 1;
   border-radius: 16px;
   padding: 20px 10px;
 `;
 
-const StartButtonText = styled.Text`
+const BackButton = styled(Button)`
+  background-color: ${colors.btnGray};
+  margin-right: 10px;
+`;
+
+const NextButton = styled(Button)`
+  background-color: ${colors.blue};
+`;
+
+const ButtonText = styled.Text`
   font-size: 24px;
   color: ${colors.textBlack};
   font-weight: bold;
@@ -83,9 +96,14 @@ const WriteDateScreen = ({ navigation }: Props) => {
             placeholderTextColor={colors.textGray}
           />
         </ContentBox>
-        <StartButton onPress={() => navigation.navigate('Start')}>
-          <StartButtonText>다음</StartButtonText>
-        </StartButton>
+        <ButtonBox>
+          <BackButton onPress={() => navigation.goBack()}>
+            <ButtonText>이전</ButtonText>
+          </BackButton>
+          <NextButton onPress={() => navigation.navigate('SelectVehicle')}>
+            <ButtonText>다음</ButtonText>
+          </NextButton>
+        </ButtonBox>
       </Container>
     </SafeAreaView>
   );

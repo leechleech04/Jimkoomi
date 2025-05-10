@@ -4,4 +4,5 @@ export const colors = {
   skyBlue: '#EFFFFD',
   textBlack: '#111111',
   textGray: '#676767',
+  btnGray: '#909090',
 };

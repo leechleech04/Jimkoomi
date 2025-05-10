@@ -1,0 +1,168 @@
+import styled from 'styled-components/native';
+import { colors } from '../colors';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import RootStackParamList from '../types';
+import { ActivityIndicator } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Asset } from 'expo-asset';
+import { Image } from 'expo-image';
+import { View } from 'react-native';
+
+const SafeAreaView = styled.SafeAreaView`
+  flex: 1;
+  background-color: ${colors.skyBlue};
+`;
+
+const Container = styled.View`
+  flex: 1;
+  align-items: center;
+  padding: 20px;
+`;
+
+const ContentBox = styled.View`
+  flex-grow: 1;
+  align-self: stretch;
+  padding: 40px 0;
+`;
+
+const Title = styled.Text`
+  font-size: 24px;
+  color: ${colors.textBlack};
+  font-weight: bold;
+  line-height: 36px;
+  width: 100%;
+`;
+
+const Comment = styled.Text`
+  font-size: 20px;
+  color: ${colors.textGray};
+  font-weight: bold;
+  line-height: 30px;
+  margin-top: 10px;
+`;
+
+const VehicleList = styled.FlatList`
+  flex-grow: 1;
+  align-self: stretch;
+  margin: 40px 0;
+`;
+
+const VehicleItem = styled.View`
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  background-color: white;
+  border-radius: 16px;
+  padding: 5px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+`;
+
+const VehicleText = styled.Text`
+  font-size: 24px;
+  color: ${colors.textBlack};
+  font-weight: bold;
+  margin-left: 40px;
+`;
+
+const VehicleImage = styled(Image)`
+  width: 100px;
+  height: 100px;
+`;
+
+const ButtonBox = styled.View`
+  align-self: stretch;
+  flex-direction: row;
+`;
+
+const Button = styled.Pressable`
+  flex-grow: 1;
+  border-radius: 16px;
+  padding: 20px 10px;
+`;
+
+const BackButton = styled(Button)`
+  background-color: ${colors.btnGray};
+  margin-right: 10px;
+`;
+
+const NextButton = styled(Button)`
+  background-color: ${colors.blue};
+`;
+
+const ButtonText = styled.Text`
+  font-size: 24px;
+  color: ${colors.textBlack};
+  font-weight: bold;
+  text-align: center;
+`;
+
+type Props = NativeStackScreenProps<RootStackParamList, 'SelectVehicle'>;
+
+const SelectVehicleScreen = ({ navigation }: Props) => {
+  const [imagesLoaded, setImagesLoaded] = useState<boolean>(false);
+  const images = [
+    { image: require('../assets/img/airplane.png'), name: '비행기' },
+    { image: require('../assets/img/bicycle.png'), name: '자전거' },
+    { image: require('../assets/img/bus.png'), name: '버스' },
+    { image: require('../assets/img/car.png'), name: '차' },
+    { image: require('../assets/img/cruise.png'), name: '크루즈' },
+    { image: require('../assets/img/ship.png'), name: '여객선' },
+    { image: require('../assets/img/subway.png'), name: '지하철' },
+    { image: require('../assets/img/train.png'), name: '기차' },
+    { image: require('../assets/img/walk.png'), name: '도보' },
+  ];
+
+  useEffect(() => {
+    const preloadImages = async () => {
+      await Promise.all(
+        images.map((item) => Asset.fromModule(item.image).downloadAsync())
+      );
+      setImagesLoaded(true);
+    };
+
+    preloadImages();
+  });
+
+  if (!imagesLoaded) {
+    return (
+      <SafeAreaView>
+        <ActivityIndicator size="large" color={colors.blue} />
+      </SafeAreaView>
+    );
+  }
+
+  interface VehicleItem {
+    image: any;
+    name: string;
+  }
+
+  return (
+    <SafeAreaView>
+      <Container>
+        <Title>여행 시 이동 수단을 선택해주세요</Title>
+        <Comment>이동 수단에 따라 중요한 준비물을 추천해드릴게요</Comment>
+        <VehicleList
+          data={images}
+          renderItem={({ item }: { item: VehicleItem }) => (
+            <VehicleItem>
+              <VehicleImage source={item.image} />
+              <VehicleText>{item.name}</VehicleText>
+            </VehicleItem>
+          )}
+          keyExtractor={(item: VehicleItem) => item.name}
+          ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
+        />
+        <ButtonBox>
+          <BackButton onPress={() => navigation.goBack()}>
+            <ButtonText>이전</ButtonText>
+          </BackButton>
+          <NextButton onPress={() => navigation.navigate('Start')}>
+            <ButtonText>다음</ButtonText>
+          </NextButton>
+        </ButtonBox>
+      </Container>
+    </SafeAreaView>
+  );
+};
+
+export default SelectVehicleScreen;

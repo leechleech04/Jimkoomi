@@ -67,8 +67,8 @@ const StartScreen = ({ navigation }: Props) => {
   useEffect(() => {
     const preloadImages = async () => {
       const images = [
-        require('../assets/splash-logo.png'),
-        require('../assets/text-logo.png'),
+        require('../assets/logo/splash-logo.png'),
+        require('../assets/logo/text-logo.png'),
       ];
       await Promise.all(
         images.map((image) => Asset.fromModule(image).downloadAsync())
@@ -91,8 +91,8 @@ const StartScreen = ({ navigation }: Props) => {
     <SafeAreaView>
       <Container>
         <ContentBox>
-          <LogoImage source={require('../assets/splash-logo.png')} />
-          <TextImage source={require('../assets/text-logo.png')} />
+          <LogoImage source={require('../assets/logo/splash-logo.png')} />
+          <TextImage source={require('../assets/logo/text-logo.png')} />
           <Comment>여행 전, 짐 걱정 끝!</Comment>
           <Comment>체크리스트로 완벽하게 준비하세요!</Comment>
         </ContentBox>

@@ -30,11 +30,20 @@
         "expo-asset",
         {
           "assets": [
-            "./assets/logo.png",
-            "./assets/splash-logo.png",
-            "./assets/adaptive-logo.png",
-            "./assets/favicon.png",
-            "./assets/text-logo.png"
+            "./assets/logo/logo.png",
+            "./assets/logo/splash-logo.png",
+            "./assets/logo/adaptive-logo.png",
+            "./assets/logo/favicon.png",
+            "./assets/logo/text-logo.png",
+            "./assets/img/airplane.png",
+            "./assets/img/bicycle.png",
+            "./assets/img/bus.png",
+            "./assets/img/car.png",
+            "./assets/img/cruise.png",
+            "./assets/img/ship.png",
+            "./assets/img/subway.png",
+            "./assets/img/train.png",
+            "./assets/img/walk.png"
           ]
         }
       ]

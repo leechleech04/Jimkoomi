@@ -68,7 +68,7 @@ const WriteDestinationScreen = ({ navigation }: Props) => {
   return (
     <SafeAreaView>
       <Container>
-        <Title>여행의 목적지를 입력해주세요.</Title>
+        <Title>여행의 목적지를 입력해주세요</Title>
         <Comment>
           어디로 떠나는지 알려주시면, 그 지역에 꼭 필요한 준비물을 알려드릴게요!
         </Comment>

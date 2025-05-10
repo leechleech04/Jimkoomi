@@ -36,7 +36,7 @@ const Comment = styled.Text`
   margin-top: 10px;
 `;
 
-const DestinationInput = styled.TextInput`
+const DateInput = styled.TextInput`
   align-self: stretch;
   font-size: 24px;
   color: ${colors.textBlack};
@@ -46,6 +46,7 @@ const DestinationInput = styled.TextInput`
   background-color: white;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
   elevation: 4;
+  margin-bottom: 20px;
 `;
 
 const StartButton = styled.Pressable`
@@ -62,21 +63,27 @@ const StartButtonText = styled.Text`
   text-align: center;
 `;
 
-type Props = NativeStackScreenProps<RootStackParamList, 'WriteDestination'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'WriteDate'>;
 
-const WriteDestinationScreen = ({ navigation }: Props) => {
+const WriteDateScreen = ({ navigation }: Props) => {
   return (
     <SafeAreaView>
       <Container>
-        <Title>여행의 목적지를 입력해주세요.</Title>
-        <Comment>여행 장소의 특성에 적합한 준비물을 추천해드릴게요</Comment>
+        <Title>여행의 출발 날짜, 도착 날짜를 입력해주세요</Title>
+        <Comment>
+          여행 장소와 날짜를 고려하여 날씨에 맞는 준비물을 추천해드릴게요
+        </Comment>
         <ContentBox>
-          <DestinationInput
-            placeholder="ex) 서울, 도쿄"
+          <DateInput
+            placeholder="ex) 2025-05-10"
+            placeholderTextColor={colors.textGray}
+          />
+          <DateInput
+            placeholder="ex) 2025-05-13"
             placeholderTextColor={colors.textGray}
           />
         </ContentBox>
-        <StartButton onPress={() => navigation.navigate('WriteDate')}>
+        <StartButton onPress={() => navigation.navigate('Start')}>
           <StartButtonText>다음</StartButtonText>
         </StartButton>
       </Container>
@@ -84,4 +91,4 @@ const WriteDestinationScreen = ({ navigation }: Props) => {
   );
 };
 
-export default WriteDestinationScreen;
+export default WriteDateScreen;

@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import StartScreen from '../screens/StartScreen';
 import WriteDestinationScreen from '../screens/WriteDestinationScreen';
 import RootStackParamList from '../types';
+import WriteDateScreen from '../screens/WriteDateScreen';
 
 const MyStack = createNativeStackNavigator<RootStackParamList>();
 
@@ -11,7 +12,7 @@ function Stack() {
       screenOptions={{
         headerShown: false,
         animation: 'fade',
-        // gestureEnabled: false,
+        gestureEnabled: false,
       }}
     >
       <MyStack.Screen name="Start" component={StartScreen} />
@@ -19,6 +20,7 @@ function Stack() {
         name="WriteDestination"
         component={WriteDestinationScreen}
       />
+      <MyStack.Screen name="WriteDate" component={WriteDateScreen} />
     </MyStack.Navigator>
   );
 }

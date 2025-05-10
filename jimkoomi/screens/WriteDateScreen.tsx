@@ -71,9 +71,16 @@ const NextButton = styled(Button)`
 
 const ButtonText = styled.Text`
   font-size: 24px;
-  color: ${colors.textBlack};
   font-weight: bold;
   text-align: center;
+`;
+
+const BackButtonText = styled(ButtonText)`
+  color: white;
+`;
+
+const NextButtonText = styled(ButtonText)`
+  color: ${colors.textBlack};
 `;
 
 type Props = NativeStackScreenProps<RootStackParamList, 'WriteDate'>;
@@ -84,7 +91,7 @@ const WriteDateScreen = ({ navigation }: Props) => {
       <Container>
         <Title>여행의 출발 날짜, 도착 날짜를 입력해주세요</Title>
         <Comment>
-          여행 장소와 날짜를 고려하여 날씨에 맞는 준비물을 추천해드릴게요
+          언제 떠나는 여행인가요? 계절과 날씨에 맞게 챙길 것들을 골라볼게요.
         </Comment>
         <ContentBox>
           <DateInput
@@ -98,10 +105,10 @@ const WriteDateScreen = ({ navigation }: Props) => {
         </ContentBox>
         <ButtonBox>
           <BackButton onPress={() => navigation.goBack()}>
-            <ButtonText>이전</ButtonText>
+            <BackButtonText>이전</BackButtonText>
           </BackButton>
           <NextButton onPress={() => navigation.navigate('SelectVehicle')}>
-            <ButtonText>다음</ButtonText>
+            <NextButtonText>다음</NextButtonText>
           </NextButton>
         </ButtonBox>
       </Container>

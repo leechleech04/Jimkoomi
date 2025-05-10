@@ -69,7 +69,9 @@ const WriteDestinationScreen = ({ navigation }: Props) => {
     <SafeAreaView>
       <Container>
         <Title>여행의 목적지를 입력해주세요.</Title>
-        <Comment>여행 장소의 특성에 적합한 준비물을 추천해드릴게요</Comment>
+        <Comment>
+          어디로 떠나는지 알려주시면, 그 지역에 꼭 필요한 준비물을 알려드릴게요!
+        </Comment>
         <ContentBox>
           <DestinationInput
             placeholder="ex) 서울, 도쿄"

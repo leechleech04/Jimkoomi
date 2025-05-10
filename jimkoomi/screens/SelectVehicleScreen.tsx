@@ -96,10 +96,19 @@ const ButtonText = styled.Text`
   text-align: center;
 `;
 
+const BackButtonText = styled(ButtonText)`
+  color: white;
+`;
+
+const NextButtonText = styled(ButtonText)`
+  color: ${colors.textBlack};
+`;
+
 type Props = NativeStackScreenProps<RootStackParamList, 'SelectVehicle'>;
 
 const SelectVehicleScreen = ({ navigation }: Props) => {
   const [imagesLoaded, setImagesLoaded] = useState<boolean>(false);
+
   const images = [
     { image: require('../assets/img/airplane.png'), name: '비행기' },
     { image: require('../assets/img/bicycle.png'), name: '자전거' },
@@ -140,7 +149,10 @@ const SelectVehicleScreen = ({ navigation }: Props) => {
     <SafeAreaView>
       <Container>
         <Title>여행 시 이동 수단을 선택해주세요</Title>
-        <Comment>이동 수단에 따라 중요한 준비물을 추천해드릴게요</Comment>
+        <Comment>
+          어떤 방식으로 이동하실지 알려주시면, 놓치기 쉬운 준비물도 빠짐없이
+          챙겨드릴게요!
+        </Comment>
         <VehicleList
           data={images}
           renderItem={({ item }: { item: VehicleItem }) => (
@@ -154,10 +166,10 @@ const SelectVehicleScreen = ({ navigation }: Props) => {
         />
         <ButtonBox>
           <BackButton onPress={() => navigation.goBack()}>
-            <ButtonText>이전</ButtonText>
+            <BackButtonText>이전</BackButtonText>
           </BackButton>
-          <NextButton onPress={() => navigation.navigate('Start')}>
-            <ButtonText>다음</ButtonText>
+          <NextButton onPress={() => navigation.navigate('SelectActivity')}>
+            <NextButtonText>다음</NextButtonText>
           </NextButton>
         </ButtonBox>
       </Container>

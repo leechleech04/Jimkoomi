@@ -1,10 +1,10 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import StartScreen from '../screens/StartScreen';
 import WriteDestinationScreen from '../screens/WriteDestinationScreen';
-import RootStackParamList from '../types';
 import WriteDateScreen from '../screens/WriteDateScreen';
 import SelectVehicleScreen from '../screens/SelectVehicleScreen';
 import SelectActivityScreen from '../screens/SelectActivityScreen';
+import { RootStackParamList } from '../types';
 
 const MyStack = createNativeStackNavigator<RootStackParamList>();
 

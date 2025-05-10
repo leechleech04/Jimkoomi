@@ -1,7 +1,7 @@
 import styled from 'styled-components/native';
 import { colors } from '../colors';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import RootStackParamList from '../types';
+import { RootStackParamList } from '../types';
 
 const SafeAreaView = styled.SafeAreaView`
   flex: 1;

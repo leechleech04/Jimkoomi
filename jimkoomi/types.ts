@@ -1,4 +1,4 @@
-type RootStackParamList = {
+export type RootStackParamList = {
   Start: undefined;
   WriteDestination: undefined;
   WriteDate: undefined;
@@ -6,4 +6,7 @@ type RootStackParamList = {
   SelectActivity: undefined;
 };
 
-export default RootStackParamList;
+export interface VehicleItem {
+  image: any;
+  name: string;
+}

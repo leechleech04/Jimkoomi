@@ -1,12 +1,12 @@
 import styled from 'styled-components/native';
 import { colors } from '../colors';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import RootStackParamList from '../types';
+import { RootStackParamList, VehicleItem } from '../types';
 import { ActivityIndicator } from 'react-native';
 import { useEffect, useState } from 'react';
 import { Asset } from 'expo-asset';
-import { Image } from 'expo-image';
 import { View } from 'react-native';
+import VehicleButton from '../components/VehicleButton';
 
 const SafeAreaView = styled.SafeAreaView`
   flex: 1;
@@ -17,12 +17,6 @@ const Container = styled.View`
   flex: 1;
   align-items: center;
   padding: 20px;
-`;
-
-const ContentBox = styled.View`
-  flex-grow: 1;
-  align-self: stretch;
-  padding: 40px 0;
 `;
 
 const Title = styled.Text`
@@ -45,28 +39,6 @@ const VehicleList = styled.FlatList`
   flex-grow: 1;
   align-self: stretch;
   margin: 40px 0;
-`;
-
-const VehicleItem = styled.View`
-  width: 100%;
-  flex-direction: row;
-  align-items: center;
-  background-color: white;
-  border-radius: 16px;
-  padding: 5px;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
-`;
-
-const VehicleText = styled.Text`
-  font-size: 24px;
-  color: ${colors.textBlack};
-  font-weight: bold;
-  margin-left: 40px;
-`;
-
-const VehicleImage = styled(Image)`
-  width: 100px;
-  height: 100px;
 `;
 
 const ButtonBox = styled.View`
@@ -130,7 +102,9 @@ const SelectVehicleScreen = ({ navigation }: Props) => {
     };
 
     preloadImages();
-  });
+  }, []);
+
+  const [isScrolling, setIsScrolling] = useState<boolean>(false);
 
   if (!imagesLoaded) {
     return (
@@ -138,11 +112,6 @@ const SelectVehicleScreen = ({ navigation }: Props) => {
         <ActivityIndicator size="large" color={colors.blue} />
       </SafeAreaView>
     );
-  }
-
-  interface VehicleItem {
-    image: any;
-    name: string;
   }
 
   return (
@@ -156,13 +125,14 @@ const SelectVehicleScreen = ({ navigation }: Props) => {
         <VehicleList
           data={images}
           renderItem={({ item }: { item: VehicleItem }) => (
-            <VehicleItem>
-              <VehicleImage source={item.image} />
-              <VehicleText>{item.name}</VehicleText>
-            </VehicleItem>
+            <VehicleButton vehicle={item} isScrolling={isScrolling} />
           )}
           keyExtractor={(item: VehicleItem) => item.name}
           ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
+          onScrollBeginDrag={() => setIsScrolling(true)}
+          onScrollEndDrag={() => setIsScrolling(false)}
+          onMomentumScrollBegin={() => setIsScrolling(true)}
+          onMomentumScrollEnd={() => setIsScrolling(false)}
         />
         <ButtonBox>
           <BackButton onPress={() => navigation.goBack()}>

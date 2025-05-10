@@ -4,10 +4,15 @@ import { Dimensions } from 'react-native';
 
 const { width } = Dimensions.get('window');
 
-const Container = styled.SafeAreaView`
+const SafeAreaView = styled.SafeAreaView`
   flex: 1;
   background-color: ${colors.skyBlue};
+`;
+
+const Container = styled.View`
+  flex: 1;
   align-items: center;
+  padding: 0 20px;
 `;
 
 const ContentBox = styled.View`
@@ -30,38 +35,39 @@ const TextImage = styled.Image`
 
 const Comment = styled.Text`
   font-size: 24px;
-  color: black;
+  color: ${colors.textBlack};
   font-weight: bold;
 `;
 
 const StartButton = styled.Pressable`
   align-self: stretch;
   background-color: ${colors.blue};
-  border-radius: 20px;
-  margin: 0 20px;
+  border-radius: 16px;
   padding: 20px 0;
 `;
 
 const StartButtonText = styled.Text`
   font-size: 24px;
-  color: black;
+  color: ${colors.textBlack};
   font-weight: bold;
   text-align: center;
 `;
 
 const StartScreen = () => {
   return (
-    <Container>
-      <ContentBox>
-        <LogoImage source={require('../assets/splash-logo.png')} />
-        <TextImage source={require('../assets/text-logo.png')} />
-        <Comment>여행 전, 짐 걱정 끝!</Comment>
-        <Comment>체크리스트로 완벽하게 준비하세요!</Comment>
-      </ContentBox>
-      <StartButton>
-        <StartButtonText>시작하기</StartButtonText>
-      </StartButton>
-    </Container>
+    <SafeAreaView>
+      <Container>
+        <ContentBox>
+          <LogoImage source={require('../assets/splash-logo.png')} />
+          <TextImage source={require('../assets/text-logo.png')} />
+          <Comment>여행 전, 짐 걱정 끝!</Comment>
+          <Comment>체크리스트로 완벽하게 준비하세요!</Comment>
+        </ContentBox>
+        <StartButton>
+          <StartButtonText>시작하기</StartButtonText>
+        </StartButton>
+      </Container>
+    </SafeAreaView>
   );
 };
 

@@ -1,7 +1,12 @@
-import StartScreen from './screens/StartScreen';
+import { NavigationContainer } from '@react-navigation/native';
+import Stack from './navigations/Stack';
 
 const App = () => {
-  return <StartScreen />;
+  return (
+    <NavigationContainer>
+      <Stack />
+    </NavigationContainer>
+  );
 };
 
 export default App;

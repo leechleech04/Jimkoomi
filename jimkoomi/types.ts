@@ -10,3 +10,9 @@ export interface VehicleItem {
   image: any;
   name: string;
 }
+
+export interface LocationData {
+  full_address: string;
+  latitude: number;
+  longitude: number;
+}

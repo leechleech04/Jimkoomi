@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 import { colors } from '../colors';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Platform } from 'react-native';
 import DateTimePicker, {
   DateTimePickerEvent,
@@ -146,6 +146,41 @@ const WriteDateScreen = ({ navigation }: Props) => {
 
   const [duration, setDuration] = useState<number>(1);
 
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, []);
+
+  const startIncrement = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+    intervalRef.current = setInterval(() => {
+      setDuration((prev) => prev + 1);
+    }, 100);
+  };
+
+  const startDecrement = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+    intervalRef.current = setInterval(() => {
+      setDuration((prev) => Math.max(prev - 1, 0));
+    }, 100);
+  };
+
+  const stopContinuousChange = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  };
+
   return (
     <SafeAreaView>
       <Container>
@@ -157,6 +192,9 @@ const WriteDateScreen = ({ navigation }: Props) => {
           <DurationBox>
             <DurationSubtractButton
               onPress={() => setDuration((prev) => Math.max(prev - 1, 0))}
+              onLongPress={startDecrement}
+              onPressOut={stopContinuousChange}
+              delayLongPress={500}
             >
               <Ionicons name="remove" size={24} color={colors.textBlack} />
             </DurationSubtractButton>
@@ -167,7 +205,12 @@ const WriteDateScreen = ({ navigation }: Props) => {
                 {duration}박 {duration + 1}일
               </DurationText>
             )}
-            <DurationAddButton onPress={() => setDuration((prev) => prev + 1)}>
+            <DurationAddButton
+              onPress={() => setDuration((prev) => prev + 1)}
+              onLongPress={startIncrement}
+              onPressOut={stopContinuousChange}
+              delayLongPress={500}
+            >
               <Ionicons name="add" size={24} color={colors.textBlack} />
             </DurationAddButton>
           </DurationBox>

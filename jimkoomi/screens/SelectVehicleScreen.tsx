@@ -7,6 +7,9 @@ import { useEffect, useState } from 'react';
 import { Asset } from 'expo-asset';
 import { View } from 'react-native';
 import VehicleButton from '../components/VehicleButton';
+import { useDispatch } from 'react-redux';
+import { setVehicleReducer } from '../tripDataSlice';
+import { vehicleArray } from '../data';
 
 const SafeAreaView = styled.SafeAreaView`
   flex: 1;
@@ -81,22 +84,10 @@ type Props = NativeStackScreenProps<RootStackParamList, 'SelectVehicle'>;
 const SelectVehicleScreen = ({ navigation }: Props) => {
   const [imagesLoaded, setImagesLoaded] = useState<boolean>(false);
 
-  const images = [
-    { image: require('../assets/img/airplane.png'), name: '비행기' },
-    { image: require('../assets/img/bicycle.png'), name: '자전거' },
-    { image: require('../assets/img/bus.png'), name: '버스' },
-    { image: require('../assets/img/car.png'), name: '차' },
-    { image: require('../assets/img/cruise.png'), name: '크루즈' },
-    { image: require('../assets/img/ship.png'), name: '여객선' },
-    { image: require('../assets/img/subway.png'), name: '지하철' },
-    { image: require('../assets/img/train.png'), name: '기차' },
-    { image: require('../assets/img/walk.png'), name: '도보' },
-  ];
-
   useEffect(() => {
     const preloadImages = async () => {
       await Promise.all(
-        images.map((item) => Asset.fromModule(item.image).downloadAsync())
+        vehicleArray.map((item) => Asset.fromModule(item.image).downloadAsync())
       );
       setImagesLoaded(true);
     };
@@ -105,6 +96,15 @@ const SelectVehicleScreen = ({ navigation }: Props) => {
   }, []);
 
   const [isScrolling, setIsScrolling] = useState<boolean>(false);
+
+  const [selectedVehicle, setSelectedVehicle] = useState<number[]>([]);
+
+  const dispatch = useDispatch();
+
+  const onPressNext = () => {
+    dispatch(setVehicleReducer(selectedVehicle));
+    navigation.navigate('SelectActivity');
+  };
 
   if (!imagesLoaded) {
     return (
@@ -123,11 +123,24 @@ const SelectVehicleScreen = ({ navigation }: Props) => {
           챙겨드릴게요!
         </Comment>
         <VehicleList
-          data={images}
+          data={vehicleArray}
           renderItem={({ item }: { item: VehicleItem }) => (
-            <VehicleButton vehicle={item} isScrolling={isScrolling} />
+            <VehicleButton
+              vehicle={item}
+              isScrolling={isScrolling}
+              onSelected={(id: number) => {
+                setSelectedVehicle((prev) => {
+                  return [...prev, id];
+                });
+              }}
+              onUnselected={(id: number) => {
+                setSelectedVehicle((prev) => {
+                  return prev.filter((vehicleId) => vehicleId !== id);
+                });
+              }}
+            />
           )}
-          keyExtractor={(item: VehicleItem) => item.name}
+          keyExtractor={(item: VehicleItem) => item.id}
           ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
           onScrollBeginDrag={() => setIsScrolling(true)}
           onScrollEndDrag={() => setIsScrolling(false)}
@@ -138,7 +151,7 @@ const SelectVehicleScreen = ({ navigation }: Props) => {
           <BackButton onPress={() => navigation.goBack()}>
             <BackButtonText>이전</BackButtonText>
           </BackButton>
-          <NextButton onPress={() => navigation.navigate('SelectActivity')}>
+          <NextButton onPress={onPressNext}>
             <NextButtonText>다음</NextButtonText>
           </NextButton>
         </ButtonBox>

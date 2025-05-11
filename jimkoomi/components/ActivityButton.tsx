@@ -24,10 +24,14 @@ const ActivityButton = ({
   id,
   name,
   isScrolling,
+  onSelected,
+  onUnselected,
 }: {
   id: number;
   name: string;
   isScrolling: boolean;
+  onSelected: (id: number) => void;
+  onUnselected: (id: number) => void;
 }) => {
   const [isPressed, setIsPressed] = useState<boolean>(false);
 
@@ -58,6 +62,14 @@ const ActivityButton = ({
       setIsPressed((prev) => !prev);
     }
   };
+
+  useEffect(() => {
+    if (isPressed) {
+      onSelected(id);
+    } else {
+      onUnselected(id);
+    }
+  }, [isPressed]);
 
   return (
     <Container style={{ transform: [{ scale: ButtonScale }] }}>

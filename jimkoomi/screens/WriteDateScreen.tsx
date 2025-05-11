@@ -8,6 +8,8 @@ import DateTimePicker, {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useDispatch } from 'react-redux';
+import { setDateReducer } from '../tripDataSlice';
 
 const SafeAreaView = styled.SafeAreaView`
   flex: 1;
@@ -42,7 +44,7 @@ const Comment = styled.Text`
   margin-top: 10px;
 `;
 
-const DateBox = styled.View`
+const DateButton = styled.Pressable`
   align-self: stretch;
   padding: 20px 10px;
   border-radius: 16px;
@@ -50,8 +52,6 @@ const DateBox = styled.View`
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
   elevation: 4;
 `;
-
-const DateButton = styled.Pressable``;
 
 const DateText = styled.Text`
   font-size: 24px;
@@ -181,10 +181,22 @@ const WriteDateScreen = ({ navigation }: Props) => {
     }
   };
 
+  const dispatch = useDispatch();
+
+  const onPressNext = () => {
+    dispatch(
+      setDateReducer({
+        startDate: date.toDateString(),
+        duration: duration,
+      })
+    );
+    navigation.navigate('SelectVehicle');
+  };
+
   return (
     <SafeAreaView>
       <Container>
-        <Title>여행의 출발 날짜, 기간을 입력해주세요</Title>
+        <Title>여행의 기간, 출발 날짜를 입력해주세요</Title>
         <Comment>
           언제 떠나는 여행인가요? 계절과 날씨에 맞게 챙길 것들을 골라볼게요.
         </Comment>
@@ -214,19 +226,17 @@ const WriteDateScreen = ({ navigation }: Props) => {
               <Ionicons name="add" size={24} color={colors.textBlack} />
             </DurationAddButton>
           </DurationBox>
-          <DateBox>
-            <DateButton onPress={() => setShowPicker((prev) => !prev)}>
-              <DateText>
-                {Platform.OS === 'android'
-                  ? date.toLocaleDateString('ko-KR', {
-                      year: 'numeric',
-                      month: '2-digit',
-                      day: '2-digit',
-                    })
-                  : date.toLocaleDateString('ko-KR')}
-              </DateText>
-            </DateButton>
-          </DateBox>
+          <DateButton onPress={() => setShowPicker((prev) => !prev)}>
+            <DateText>
+              {Platform.OS === 'android'
+                ? date.toLocaleDateString('ko-KR', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                  })
+                : date.toLocaleDateString('ko-KR')}
+            </DateText>
+          </DateButton>
           {showPicker && (
             <DateTimePicker
               testID="dateTimePicker"
@@ -244,7 +254,7 @@ const WriteDateScreen = ({ navigation }: Props) => {
           <BackButton onPress={() => navigation.goBack()}>
             <BackButtonText>이전</BackButtonText>
           </BackButton>
-          <NextButton onPress={() => navigation.navigate('SelectVehicle')}>
+          <NextButton onPress={onPressNext}>
             <NextButtonText>다음</NextButtonText>
           </NextButton>
         </ButtonBox>

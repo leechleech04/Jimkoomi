@@ -2,9 +2,11 @@ import styled from 'styled-components/native';
 import { colors } from '../colors';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { LocationData, RootStackParamList } from '../types';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import { ActivityIndicator, Alert } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { setLocationReducer } from '../tripDataSlice';
 
 const SafeAreaView = styled.SafeAreaView`
   flex: 1;
@@ -105,9 +107,8 @@ const WriteDestinationScreen = ({ navigation }: Props) => {
 
       if (response.data.features.length === 1) {
         const data = response.data.features[0].properties;
-        console.log(data.full_address, data.coordinates);
         setLocationData({
-          full_address: data.full_address,
+          fullAddress: data.full_address,
           latitude: data.coordinates[0],
           longitude: data.coordinates[1],
         });
@@ -125,6 +126,8 @@ const WriteDestinationScreen = ({ navigation }: Props) => {
     }
   };
 
+  const dispatch = useDispatch();
+
   const onPressNext = () => {
     if (isLoading) {
       Alert.alert('위치 정보를 가져오는 중입니다. 잠시만 기다려주세요.', '', [
@@ -133,6 +136,7 @@ const WriteDestinationScreen = ({ navigation }: Props) => {
       return;
     }
     if (locationData) {
+      dispatch(setLocationReducer(locationData));
       navigation.navigate('WriteDate');
     } else {
       Alert.alert('목적지를 입력해주세요.', '', [
@@ -163,7 +167,7 @@ const WriteDestinationScreen = ({ navigation }: Props) => {
               style={{ marginTop: 20 }}
             />
           ) : locationData ? (
-            <LocationName>목적지: {locationData.full_address}</LocationName>
+            <LocationName>목적지: {locationData.fullAddress}</LocationName>
           ) : null}
         </ContentBox>
         <NextButton onPress={onPressNext}>

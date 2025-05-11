@@ -7,12 +7,13 @@ export type RootStackParamList = {
 };
 
 export interface VehicleItem {
+  id: number;
   image: any;
   name: string;
 }
 
 export interface LocationData {
-  full_address: string;
+  fullAddress: string;
   latitude: number;
   longitude: number;
 }

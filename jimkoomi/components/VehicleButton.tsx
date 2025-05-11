@@ -3,7 +3,7 @@ import { colors } from '../colors';
 import { Image } from 'expo-image';
 import { VehicleItem } from '../types';
 import { useEffect, useRef, useState } from 'react';
-import { Animated, View } from 'react-native';
+import { Animated } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const Container = styled(Animated.View)``;
@@ -42,9 +42,13 @@ const GradientBackground = styled(LinearGradient)`
 const VehicleButton = ({
   vehicle,
   isScrolling,
+  onSelected,
+  onUnselected,
 }: {
   vehicle: VehicleItem;
   isScrolling: boolean;
+  onSelected: (id: number) => void;
+  onUnselected: (id: number) => void;
 }) => {
   const [isPressed, setIsPressed] = useState<boolean>(false);
 
@@ -75,6 +79,14 @@ const VehicleButton = ({
       setIsPressed((prev) => !prev);
     }
   };
+
+  useEffect(() => {
+    if (isPressed) {
+      onSelected(vehicle.id);
+    } else {
+      onUnselected(vehicle.id);
+    }
+  }, [isPressed]);
 
   return (
     <Container style={{ transform: [{ scale: ButtonScale }] }}>

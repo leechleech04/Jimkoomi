@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 import { colors } from '../colors';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Platform } from 'react-native';
 import DateTimePicker, {
   DateTimePickerEvent,
@@ -10,6 +10,7 @@ import DateTimePicker, {
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useDispatch } from 'react-redux';
 import { setDateReducer } from '../tripDataSlice';
+import ProgressBar from '../components/ProgessBar';
 
 const SafeAreaView = styled.SafeAreaView`
   flex: 1;
@@ -48,7 +49,7 @@ const DateButton = styled.Pressable`
   align-self: stretch;
   padding: 20px 10px;
   border-radius: 16px;
-  background-color: white;
+  background-color: ${colors.white};
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
   elevation: 4;
 `;
@@ -74,12 +75,14 @@ const DurationButton = styled.Pressable`
   elevation: 4;
 `;
 
-const DurationAddButton = styled(DurationButton)`
-  background-color: ${colors.lightBlue};
+const DurationAddButton = styled(DurationButton)<{ disabled: boolean }>`
+  background-color: ${(props: { disabled: boolean }) =>
+    props.disabled ? colors.btnGray : colors.lightBlue};
 `;
 
-const DurationSubtractButton = styled(DurationButton)`
-  background-color: ${colors.btnRed};
+const DurationSubtractButton = styled(DurationButton)<{ disabled: boolean }>`
+  background-color: ${(props: { disabled: boolean }) =>
+    props.disabled ? colors.btnGray : colors.btnRed};
 `;
 
 const DurationText = styled.Text`
@@ -88,7 +91,7 @@ const DurationText = styled.Text`
   font-weight: bold;
   padding: 20px 10px;
   border-radius: 16px;
-  background-color: white;
+  background-color: ${colors.white};
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
   elevation: 4;
   flex-grow: 1;
@@ -123,7 +126,7 @@ const ButtonText = styled.Text`
 `;
 
 const BackButtonText = styled(ButtonText)`
-  color: white;
+  color: ${colors.white};
 `;
 
 const NextButtonText = styled(ButtonText)`
@@ -133,18 +136,19 @@ const NextButtonText = styled(ButtonText)`
 type Props = NativeStackScreenProps<RootStackParamList, 'WriteDate'>;
 
 const WriteDateScreen = ({ navigation }: Props) => {
+  const dispatch = useDispatch();
+
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
-
-  const onChange = (
-    event: DateTimePickerEvent,
-    selectedDate: Date | undefined
-  ) => {
-    const currentDate = selectedDate || date;
-    setDate(currentDate);
-  };
-
   const [duration, setDuration] = useState<number>(1);
+
+  const onChange = useCallback(
+    (event: DateTimePickerEvent, selectedDate: Date | undefined) => {
+      const currentDate = selectedDate || date;
+      setDate(currentDate);
+    },
+    [date]
+  );
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -161,7 +165,7 @@ const WriteDateScreen = ({ navigation }: Props) => {
       clearInterval(intervalRef.current);
     }
     intervalRef.current = setInterval(() => {
-      setDuration((prev) => prev + 1);
+      setDuration((prev) => Math.min(prev + 1, 30));
     }, 100);
   };
 
@@ -181,9 +185,7 @@ const WriteDateScreen = ({ navigation }: Props) => {
     }
   };
 
-  const dispatch = useDispatch();
-
-  const onPressNext = () => {
+  const onPressNext = useCallback(() => {
     dispatch(
       setDateReducer({
         startDate: date.toDateString(),
@@ -191,11 +193,12 @@ const WriteDateScreen = ({ navigation }: Props) => {
       })
     );
     navigation.navigate('SelectVehicle');
-  };
+  }, [date, duration, dispatch, navigation]);
 
   return (
     <SafeAreaView>
       <Container>
+        <ProgressBar step={2} />
         <Title>여행의 기간, 출발 날짜를 입력해주세요</Title>
         <Comment>
           언제 떠나는 여행인가요? 계절과 날씨에 맞게 챙길 것들을 골라볼게요.
@@ -207,6 +210,7 @@ const WriteDateScreen = ({ navigation }: Props) => {
               onLongPress={startDecrement}
               onPressOut={stopContinuousChange}
               delayLongPress={500}
+              disabled={duration === 0}
             >
               <Ionicons name="remove" size={24} color={colors.textBlack} />
             </DurationSubtractButton>
@@ -218,23 +222,22 @@ const WriteDateScreen = ({ navigation }: Props) => {
               </DurationText>
             )}
             <DurationAddButton
-              onPress={() => setDuration((prev) => prev + 1)}
+              onPress={() => setDuration((prev) => Math.min(prev + 1, 30))}
               onLongPress={startIncrement}
               onPressOut={stopContinuousChange}
               delayLongPress={500}
+              disabled={duration === 30}
             >
               <Ionicons name="add" size={24} color={colors.textBlack} />
             </DurationAddButton>
           </DurationBox>
           <DateButton onPress={() => setShowPicker((prev) => !prev)}>
             <DateText>
-              {Platform.OS === 'android'
-                ? date.toLocaleDateString('ko-KR', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                  })
-                : date.toLocaleDateString('ko-KR')}
+              {date.toLocaleDateString('ko-KR', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+              })}
             </DateText>
           </DateButton>
           {showPicker && (

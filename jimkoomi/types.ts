@@ -17,3 +17,13 @@ export interface LocationData {
   latitude: number;
   longitude: number;
 }
+
+export interface TripDataState {
+  fullAddress: string;
+  latitude: number;
+  longitude: number;
+  startDate: string;
+  duration: number;
+  vehicle: number[];
+  activity: number[];
+}

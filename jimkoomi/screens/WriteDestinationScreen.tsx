@@ -2,11 +2,13 @@ import styled from 'styled-components/native';
 import { colors } from '../colors';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { LocationData, RootStackParamList } from '../types';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import axios from 'axios';
 import { ActivityIndicator, Alert } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { setLocationReducer } from '../tripDataSlice';
+import { fetchLocationData } from '../api/mapbox';
+import ProgressBar from '../components/ProgessBar';
 
 const SafeAreaView = styled.SafeAreaView`
   flex: 1;
@@ -48,7 +50,7 @@ const DestinationInput = styled.TextInput`
   font-weight: bold;
   padding: 20px 10px;
   border-radius: 16px;
-  background-color: white;
+  background-color: ${colors.white};
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
   elevation: 4;
 `;
@@ -60,9 +62,10 @@ const LocationName = styled.Text`
   padding: 20px 10px;
 `;
 
-const NextButton = styled.Pressable`
+const NextButton = styled.Pressable<{ disabled: boolean }>`
   align-self: stretch;
-  background-color: ${colors.blue};
+  background-color: ${(props: { disabled: boolean }) =>
+    props.disabled ? colors.btnGray : colors.blue};
   border-radius: 16px;
   padding: 20px 10px;
 `;
@@ -77,11 +80,13 @@ const NextButtonText = styled.Text`
 type Props = NativeStackScreenProps<RootStackParamList, 'WriteDestination'>;
 
 const WriteDestinationScreen = ({ navigation }: Props) => {
+  const dispatch = useDispatch();
+
   const [destination, setDestination] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [locationData, setLocationData] = useState<LocationData | null>(null);
 
-  const validateLocation = async () => {
+  const validateLocation = useCallback(async () => {
     if (destination.length === 0) {
       setLocationData(null);
       Alert.alert('목적지를 입력해주세요.', '', [
@@ -91,50 +96,25 @@ const WriteDestinationScreen = ({ navigation }: Props) => {
     }
 
     setIsLoading(true);
-    try {
-      const response = await axios.get(
-        `https://api.mapbox.com/search/geocode/v6/forward`,
-        {
-          params: {
-            q: destination,
-            access_token: process.env.EXPO_PUBLIC_MAPBOX_TOKEN,
-            language: 'ko',
-            limit: 1,
-          },
-        }
-      );
-      setIsLoading(false);
+    const result = await fetchLocationData(destination);
+    setIsLoading(false);
 
-      if (response.data.features.length === 1) {
-        const data = response.data.features[0].properties;
-        setLocationData({
-          fullAddress: data.full_address,
-          latitude: data.coordinates[0],
-          longitude: data.coordinates[1],
-        });
-      } else {
-        Alert.alert('유효한 목적지를 찾을 수 없습니다.');
-        setLocationData(null);
-      }
-    } catch (error) {
-      setIsLoading(false);
-      console.error(error);
+    if (result) {
+      setLocationData(result);
+    } else {
+      Alert.alert('유효한 목적지를 찾을 수 없습니다.');
       setLocationData(null);
-      Alert.alert('Error', '위치 정보를 가져오는 중 오류가 발생했습니다.', [
-        { text: '확인', style: 'default' },
-      ]);
     }
-  };
+  }, [destination]);
 
-  const dispatch = useDispatch();
-
-  const onPressNext = () => {
+  const onPressNext = useCallback(() => {
     if (isLoading) {
       Alert.alert('위치 정보를 가져오는 중입니다. 잠시만 기다려주세요.', '', [
         { text: '확인', style: 'default' },
       ]);
       return;
     }
+
     if (locationData) {
       dispatch(setLocationReducer(locationData));
       navigation.navigate('WriteDate');
@@ -143,11 +123,12 @@ const WriteDestinationScreen = ({ navigation }: Props) => {
         { text: '확인', style: 'default' },
       ]);
     }
-  };
+  }, [isLoading, locationData, dispatch, navigation]);
 
   return (
     <SafeAreaView>
       <Container>
+        <ProgressBar step={1} />
         <Title>여행의 목적지를 입력해주세요</Title>
         <Comment>
           어디로 떠나는지 알려주시면, 그 지역에 꼭 필요한 준비물을 알려드릴게요!
@@ -170,7 +151,10 @@ const WriteDestinationScreen = ({ navigation }: Props) => {
             <LocationName>목적지: {locationData.fullAddress}</LocationName>
           ) : null}
         </ContentBox>
-        <NextButton onPress={onPressNext}>
+        <NextButton
+          disabled={isLoading || locationData === null}
+          onPress={onPressNext}
+        >
           <NextButtonText>다음</NextButtonText>
         </NextButton>
       </Container>

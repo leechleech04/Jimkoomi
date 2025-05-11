@@ -3,10 +3,11 @@ import { colors } from '../colors';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
 import ActivityButton from '../components/ActivityButton';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { activities } from '../data';
 import { useDispatch } from 'react-redux';
 import { setActivityReducer } from '../tripDataSlice';
+import ProgressBar from '../components/ProgessBar';
 
 const SafeAreaView = styled.SafeAreaView`
   flex: 1;
@@ -75,7 +76,7 @@ const ButtonText = styled.Text`
 `;
 
 const BackButtonText = styled(ButtonText)`
-  color: white;
+  color: ${colors.white};
 `;
 
 const NextButtonText = styled(ButtonText)`
@@ -85,20 +86,20 @@ const NextButtonText = styled(ButtonText)`
 type Props = NativeStackScreenProps<RootStackParamList, 'SelectActivity'>;
 
 const SelectActivityScreen = ({ navigation }: Props) => {
-  const [isScrolling, setIsScrolling] = useState<boolean>(false);
-
-  const [selectedActivity, setSelectedActivity] = useState<number[]>([]);
-
   const dispatch = useDispatch();
 
-  const onPressNext = () => {
+  const [isScrolling, setIsScrolling] = useState<boolean>(false);
+  const [selectedActivity, setSelectedActivity] = useState<number[]>([]);
+
+  const onPressNext = useCallback(() => {
     dispatch(setActivityReducer(selectedActivity));
-    navigation.navigate('SelectActivity');
-  };
+    navigation.navigate('Start');
+  }, [selectedActivity, navigation, dispatch]);
 
   return (
     <SafeAreaView>
       <Container>
+        <ProgressBar step={4} />
         <Title>여행 시 활동을 선택해주세요</Title>
         <Comment>
           어떤 활동을 계획하고 계신가요? 활동에 딱 맞는 준비물을 추천해 드릴 수

@@ -5,6 +5,7 @@ import { VehicleItem } from '../types';
 import { useEffect, useRef, useState } from 'react';
 import { Animated } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
 
 const Container = styled(Animated.View)``;
 
@@ -15,7 +16,7 @@ const Vehicle = styled.Pressable`
   border-radius: 16px;
   padding: 5px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
-  background-color: white;
+  background-color: ${colors.white};
 `;
 
 const VehicleImage = styled(Image)`
@@ -28,6 +29,7 @@ const VehicleText = styled.Text`
   color: ${colors.textBlack};
   font-weight: bold;
   margin-left: 40px;
+  flex-grow: 1;
 `;
 
 const GradientBackground = styled(LinearGradient)`
@@ -93,13 +95,21 @@ const VehicleButton = ({
       <Vehicle onPressIn={handlePressIn} onPressOut={handlePressOut}>
         {isPressed ? (
           <GradientBackground
-            colors={['white', colors.lightBlue]}
+            colors={[colors.white, colors.lightBlue]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
           />
         ) : null}
         <VehicleImage source={vehicle.image} />
         <VehicleText>{vehicle.name}</VehicleText>
+        {isPressed && (
+          <Ionicons
+            name="checkmark-circle"
+            size={36}
+            color={colors.white}
+            style={{ marginRight: 20 }}
+          />
+        )}
       </Vehicle>
     </Container>
   );

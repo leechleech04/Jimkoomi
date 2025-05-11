@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 const Container = styled(Animated.View)``;
 
 const ActivityItem = styled.Pressable`
-  background-color: white;
+  background-color: ${colors.white};
   padding: 20px;
   border-radius: 16px;
   margin: 5px;
@@ -77,7 +77,7 @@ const ActivityButton = ({
         key={id}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
-        style={{ backgroundColor: isPressed ? colors.lightBlue : 'white' }}
+        style={{ backgroundColor: isPressed ? colors.lightBlue : colors.white }}
       >
         <ActivityText>{name}</ActivityText>
       </ActivityItem>

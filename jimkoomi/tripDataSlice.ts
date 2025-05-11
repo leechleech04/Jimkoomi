@@ -1,17 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from './store';
-import { LocationData } from './types';
-
-interface TripDataState {
-  fullAddress: string;
-  latitude: number;
-  longitude: number;
-  startDate: string;
-  duration: number;
-  vehicle: number[];
-  activity: number[];
-}
+import { LocationData, TripDataState } from './types';
 
 const initialState: TripDataState = {
   fullAddress: '',

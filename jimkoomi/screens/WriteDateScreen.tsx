@@ -2,6 +2,11 @@ import styled from 'styled-components/native';
 import { colors } from '../colors';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
+import { useState } from 'react';
+import { Platform } from 'react-native';
+import DateTimePicker, {
+  DateTimePickerEvent,
+} from '@react-native-community/datetimepicker';
 
 const SafeAreaView = styled.SafeAreaView`
   flex: 1;
@@ -36,17 +41,21 @@ const Comment = styled.Text`
   margin-top: 10px;
 `;
 
-const DateInput = styled.TextInput`
+const DateBox = styled.View`
   align-self: stretch;
-  font-size: 24px;
-  color: ${colors.textBlack};
-  font-weight: bold;
   padding: 20px 10px;
   border-radius: 16px;
   background-color: white;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
   elevation: 4;
-  margin-bottom: 20px;
+`;
+
+const DateButton = styled.Pressable``;
+
+const DateText = styled.Text`
+  font-size: 24px;
+  color: ${colors.textBlack};
+  font-weight: bold;
 `;
 
 const ButtonBox = styled.View`
@@ -86,22 +95,48 @@ const NextButtonText = styled(ButtonText)`
 type Props = NativeStackScreenProps<RootStackParamList, 'WriteDate'>;
 
 const WriteDateScreen = ({ navigation }: Props) => {
+  const [date, setDate] = useState(new Date());
+  const [showPicker, setShowPicker] = useState(true);
+
+  const onChange = (
+    event: DateTimePickerEvent,
+    selectedDate: Date | undefined
+  ) => {
+    const currentDate = selectedDate || date;
+    setDate(currentDate);
+  };
+
   return (
     <SafeAreaView>
       <Container>
-        <Title>여행의 출발 날짜, 도착 날짜를 입력해주세요</Title>
+        <Title>여행의 출발 날짜, 기간을 입력해주세요</Title>
         <Comment>
           언제 떠나는 여행인가요? 계절과 날씨에 맞게 챙길 것들을 골라볼게요.
         </Comment>
         <ContentBox>
-          <DateInput
-            placeholder="ex) 2025-05-10"
-            placeholderTextColor={colors.textGray}
-          />
-          <DateInput
-            placeholder="ex) 2025-05-13"
-            placeholderTextColor={colors.textGray}
-          />
+          <DateBox>
+            <DateButton onPress={() => setShowPicker((prev) => !prev)}>
+              <DateText>
+                {Platform.OS === 'android'
+                  ? date.toLocaleDateString('ko-KR', {
+                      year: 'numeric',
+                      month: '2-digit',
+                      day: '2-digit',
+                    })
+                  : date.toLocaleDateString('ko-KR')}
+              </DateText>
+            </DateButton>
+          </DateBox>
+          {showPicker && (
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={date}
+              mode={'date'}
+              display="spinner"
+              onChange={onChange}
+              locale="ko-KR"
+            />
+          )}
         </ContentBox>
         <ButtonBox>
           <BackButton onPress={() => navigation.goBack()}>

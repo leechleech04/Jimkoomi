@@ -4,7 +4,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { LocationData, RootStackParamList } from '../types';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Alert } from 'react-native';
+import { ActivityIndicator, Alert } from 'react-native';
 
 const SafeAreaView = styled.SafeAreaView`
   flex: 1;
@@ -82,7 +82,9 @@ const WriteDestinationScreen = ({ navigation }: Props) => {
   const validateLocation = async () => {
     if (destination.length === 0) {
       setLocationData(null);
-      Alert.alert('목적지를 입력해주세요.');
+      Alert.alert('목적지를 입력해주세요.', '', [
+        { text: '확인', style: 'default' },
+      ]);
       return;
     }
 
@@ -117,7 +119,25 @@ const WriteDestinationScreen = ({ navigation }: Props) => {
       setIsLoading(false);
       console.error(error);
       setLocationData(null);
-      Alert.alert('위치 정보를 가져오는 중 오류가 발생했습니다.');
+      Alert.alert('Error', '위치 정보를 가져오는 중 오류가 발생했습니다.', [
+        { text: '확인', style: 'default' },
+      ]);
+    }
+  };
+
+  const onPressNext = () => {
+    if (isLoading) {
+      Alert.alert('위치 정보를 가져오는 중입니다. 잠시만 기다려주세요.', '', [
+        { text: '확인', style: 'default' },
+      ]);
+      return;
+    }
+    if (locationData) {
+      navigation.navigate('WriteDate');
+    } else {
+      Alert.alert('목적지를 입력해주세요.', '', [
+        { text: '확인', style: 'default' },
+      ]);
     }
   };
 
@@ -136,25 +156,17 @@ const WriteDestinationScreen = ({ navigation }: Props) => {
             onChangeText={setDestination}
             onSubmitEditing={validateLocation}
           />
-          {locationData ? (
+          {isLoading ? (
+            <ActivityIndicator
+              size="large"
+              color={colors.blue}
+              style={{ marginTop: 20 }}
+            />
+          ) : locationData ? (
             <LocationName>목적지: {locationData.full_address}</LocationName>
           ) : null}
         </ContentBox>
-        <NextButton
-          onPress={() => {
-            if (isLoading) {
-              Alert.alert(
-                '위치 정보를 가져오는 중입니다. 잠시만 기다려주세요.'
-              );
-              return;
-            }
-            if (locationData) {
-              navigation.navigate('WriteDate');
-            } else {
-              Alert.alert('목적지를 입력해주세요.');
-            }
-          }}
-        >
+        <NextButton onPress={onPressNext}>
           <NextButtonText>다음</NextButtonText>
         </NextButton>
       </Container>

@@ -5,4 +5,5 @@ export const colors = {
   textBlack: '#111111',
   textGray: '#676767',
   btnGray: '#909090',
+  btnRed: '#FF7F7F',
 };

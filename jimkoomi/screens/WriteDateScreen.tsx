@@ -7,6 +7,7 @@ import { Platform } from 'react-native';
 import DateTimePicker, {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 const SafeAreaView = styled.SafeAreaView`
   flex: 1;
@@ -58,6 +59,43 @@ const DateText = styled.Text`
   font-weight: bold;
 `;
 
+const DurationBox = styled.View`
+  align-self: stretch;
+  flex-direction: row;
+  margin-bottom: 20px;
+`;
+
+const DurationButton = styled.Pressable`
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+  elevation: 4;
+`;
+
+const DurationAddButton = styled(DurationButton)`
+  background-color: ${colors.lightBlue};
+`;
+
+const DurationSubtractButton = styled(DurationButton)`
+  background-color: ${colors.btnRed};
+`;
+
+const DurationText = styled.Text`
+  font-size: 24px;
+  color: ${colors.textBlack};
+  font-weight: bold;
+  padding: 20px 10px;
+  border-radius: 16px;
+  background-color: white;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+  elevation: 4;
+  flex-grow: 1;
+  text-align: center;
+  margin: 0 10px;
+`;
+
 const ButtonBox = styled.View`
   align-self: stretch;
   flex-direction: row;
@@ -96,7 +134,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'WriteDate'>;
 
 const WriteDateScreen = ({ navigation }: Props) => {
   const [date, setDate] = useState(new Date());
-  const [showPicker, setShowPicker] = useState(true);
+  const [showPicker, setShowPicker] = useState(false);
 
   const onChange = (
     event: DateTimePickerEvent,
@@ -106,6 +144,8 @@ const WriteDateScreen = ({ navigation }: Props) => {
     setDate(currentDate);
   };
 
+  const [duration, setDuration] = useState<number>(1);
+
   return (
     <SafeAreaView>
       <Container>
@@ -114,6 +154,23 @@ const WriteDateScreen = ({ navigation }: Props) => {
           언제 떠나는 여행인가요? 계절과 날씨에 맞게 챙길 것들을 골라볼게요.
         </Comment>
         <ContentBox>
+          <DurationBox>
+            <DurationSubtractButton
+              onPress={() => setDuration((prev) => Math.max(prev - 1, 0))}
+            >
+              <Ionicons name="remove" size={24} color={colors.textBlack} />
+            </DurationSubtractButton>
+            {duration === 0 ? (
+              <DurationText>당일치기</DurationText>
+            ) : (
+              <DurationText>
+                {duration}박 {duration + 1}일
+              </DurationText>
+            )}
+            <DurationAddButton onPress={() => setDuration((prev) => prev + 1)}>
+              <Ionicons name="add" size={24} color={colors.textBlack} />
+            </DurationAddButton>
+          </DurationBox>
           <DateBox>
             <DateButton onPress={() => setShowPicker((prev) => !prev)}>
               <DateText>
@@ -134,7 +191,9 @@ const WriteDateScreen = ({ navigation }: Props) => {
               mode={'date'}
               display="spinner"
               onChange={onChange}
+              minimumDate={new Date()}
               locale="ko-KR"
+              themeVariant="light"
             />
           )}
         </ContentBox>

@@ -8,7 +8,7 @@ import { Asset } from 'expo-asset';
 import { View } from 'react-native';
 import VehicleButton from '../components/VehicleButton';
 import { useDispatch } from 'react-redux';
-import { setVehicleReducer } from '../tripDataSlice';
+import { setVehicleReducer } from '../redux/tripDataSlice';
 import { vehicleArray } from '../data';
 import ProgressBar from '../components/ProgessBar';
 

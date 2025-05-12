@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from './store';
-import { LocationData, TripDataState } from './types';
+import { LocationData, TripDataState } from '../types';
 
 const initialState: TripDataState = {
   fullAddress: '',

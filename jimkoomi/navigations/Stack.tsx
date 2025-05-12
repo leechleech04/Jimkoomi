@@ -5,6 +5,7 @@ import WriteDateScreen from '../screens/WriteDateScreen';
 import SelectVehicleScreen from '../screens/SelectVehicleScreen';
 import SelectActivityScreen from '../screens/SelectActivityScreen';
 import { RootStackParamList } from '../types';
+import CreateChecklistScreen from '../screens/CreateChecklistScreen';
 
 const MyStack = createNativeStackNavigator<RootStackParamList>();
 
@@ -25,6 +26,10 @@ function Stack() {
       <MyStack.Screen name="WriteDate" component={WriteDateScreen} />
       <MyStack.Screen name="SelectVehicle" component={SelectVehicleScreen} />
       <MyStack.Screen name="SelectActivity" component={SelectActivityScreen} />
+      <MyStack.Screen
+        name="CreateChecklist"
+        component={CreateChecklistScreen}
+      />
     </MyStack.Navigator>
   );
 }

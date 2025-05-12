@@ -4,6 +4,7 @@ export type RootStackParamList = {
   WriteDate: undefined;
   SelectVehicle: undefined;
   SelectActivity: undefined;
+  CreateChecklist: undefined;
 };
 
 export interface VehicleItem {
@@ -26,4 +27,12 @@ export interface TripDataState {
   duration: number;
   vehicle: number[];
   activity: number[];
+}
+
+export interface ChecklistItem {
+  id: number;
+  name: string;
+  quantity: number;
+  isChecked: boolean;
+  hasReminder: boolean;
 }

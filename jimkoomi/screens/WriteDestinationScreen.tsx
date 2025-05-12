@@ -6,7 +6,7 @@ import { useCallback, useState } from 'react';
 import axios from 'axios';
 import { ActivityIndicator, Alert } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { setLocationReducer } from '../tripDataSlice';
+import { setLocationReducer } from '../redux/tripDataSlice';
 import { fetchLocationData } from '../api/mapbox';
 import ProgressBar from '../components/ProgessBar';
 

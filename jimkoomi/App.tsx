@@ -2,7 +2,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import Stack from './navigations/Stack';
 import { StatusBar } from 'react-native';
 import { Provider } from 'react-redux';
-import store from './store';
+import store from './redux/store';
 
 const App = () => {
   return (

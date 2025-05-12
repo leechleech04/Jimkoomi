@@ -6,9 +6,9 @@ import ActivityButton from '../components/ActivityButton';
 import { useCallback, useState } from 'react';
 import { activities } from '../data';
 import { useDispatch, useSelector } from 'react-redux';
-import { setActivityReducer } from '../tripDataSlice';
+import { setActivityReducer } from '../redux/tripDataSlice';
 import ProgressBar from '../components/ProgessBar';
-import { RootState } from '../store';
+import { RootState } from '../redux/store';
 import { fetchWeatherData } from '../api/openMeteo';
 import moment from 'moment';
 
@@ -94,18 +94,9 @@ const SelectActivityScreen = ({ navigation }: Props) => {
   const [isScrolling, setIsScrolling] = useState<boolean>(false);
   const [selectedActivity, setSelectedActivity] = useState<number[]>([]);
 
-  const { latitude, longitude, startDate, duration } = useSelector(
-    (state: RootState) => state.tripData
-  );
   const onPressNext = useCallback(() => {
     dispatch(setActivityReducer(selectedActivity));
-    const weatherData = fetchWeatherData(
-      latitude,
-      longitude,
-      startDate,
-      duration
-    );
-    navigation.navigate('Start');
+    navigation.navigate('CreateChecklist');
   }, [selectedActivity, navigation, dispatch]);
 
   return (

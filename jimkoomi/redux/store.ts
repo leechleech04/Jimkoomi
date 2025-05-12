@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import tripDataReducer from './tripDataSlice';
+import checklistReducer from './checklistSlice';
 
 const store = configureStore({
   reducer: {
     tripData: tripDataReducer,
+    checklist: checklistReducer,
   },
 });
 

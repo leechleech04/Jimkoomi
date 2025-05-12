@@ -8,7 +8,7 @@ import DateTimePicker, {
 } from '@react-native-community/datetimepicker';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useDispatch } from 'react-redux';
-import { setDateReducer } from '../tripDataSlice';
+import { setDateReducer } from '../redux/tripDataSlice';
 import ProgressBar from '../components/ProgessBar';
 import moment from 'moment';
 

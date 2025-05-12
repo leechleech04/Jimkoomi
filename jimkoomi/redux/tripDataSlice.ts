@@ -9,8 +9,8 @@ const initialState: TripDataState = {
   longitude: 0,
   startDate: '',
   duration: 1,
-  vehicle: [],
-  activity: [],
+  vehicles: [],
+  activities: [],
 };
 
 export const tripDataSlice = createSlice({
@@ -29,11 +29,11 @@ export const tripDataSlice = createSlice({
       state.startDate = action.payload.startDate;
       state.duration = action.payload.duration;
     },
-    setVehicleReducer: (state, action: PayloadAction<number[]>) => {
-      state.vehicle = action.payload;
+    setVehiclesReducer: (state, action: PayloadAction<number[]>) => {
+      state.vehicles = action.payload;
     },
-    setActivityReducer: (state, action: PayloadAction<number[]>) => {
-      state.activity = action.payload;
+    setActivitiesReducer: (state, action: PayloadAction<number[]>) => {
+      state.activities = action.payload;
     },
   },
 });
@@ -41,8 +41,8 @@ export const tripDataSlice = createSlice({
 export const {
   setLocationReducer,
   setDateReducer,
-  setVehicleReducer,
-  setActivityReducer,
+  setVehiclesReducer,
+  setActivitiesReducer,
 } = tripDataSlice.actions;
 
 export default tripDataSlice.reducer;

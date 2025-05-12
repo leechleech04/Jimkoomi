@@ -4,9 +4,9 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
 import ActivityButton from '../components/ActivityButton';
 import { useCallback, useState } from 'react';
-import { activities } from '../data';
+import { activityArray } from '../data';
 import { useDispatch, useSelector } from 'react-redux';
-import { setActivityReducer } from '../redux/tripDataSlice';
+import { setActivitiesReducer } from '../redux/tripDataSlice';
 import ProgressBar from '../components/ProgessBar';
 import { RootState } from '../redux/store';
 import { fetchWeatherData } from '../api/openMeteo';
@@ -95,7 +95,7 @@ const SelectActivityScreen = ({ navigation }: Props) => {
   const [selectedActivity, setSelectedActivity] = useState<number[]>([]);
 
   const onPressNext = useCallback(() => {
-    dispatch(setActivityReducer(selectedActivity));
+    dispatch(setActivitiesReducer(selectedActivity));
     navigation.navigate('CreateChecklist');
   }, [selectedActivity, navigation, dispatch]);
 
@@ -115,7 +115,7 @@ const SelectActivityScreen = ({ navigation }: Props) => {
           onMomentumScrollEnd={() => setIsScrolling(false)}
         >
           <ActivityList>
-            {activities.map((activity) => (
+            {activityArray.map((activity) => (
               <ActivityButton
                 key={activity.id}
                 id={activity.id}

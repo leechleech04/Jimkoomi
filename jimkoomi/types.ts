@@ -25,8 +25,8 @@ export interface TripDataState {
   longitude: number;
   startDate: string;
   duration: number;
-  vehicle: number[];
-  activity: number[];
+  vehicles: number[];
+  activities: number[];
 }
 
 export interface ChecklistItem {

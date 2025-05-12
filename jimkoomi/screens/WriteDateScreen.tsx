@@ -3,7 +3,6 @@ import { colors } from '../colors';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Platform } from 'react-native';
 import DateTimePicker, {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
@@ -11,6 +10,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useDispatch } from 'react-redux';
 import { setDateReducer } from '../tripDataSlice';
 import ProgressBar from '../components/ProgessBar';
+import moment from 'moment';
 
 const SafeAreaView = styled.SafeAreaView`
   flex: 1;
@@ -165,7 +165,7 @@ const WriteDateScreen = ({ navigation }: Props) => {
       clearInterval(intervalRef.current);
     }
     intervalRef.current = setInterval(() => {
-      setDuration((prev) => Math.min(prev + 1, 30));
+      setDuration((prev) => Math.min(prev + 1, 15));
     }, 100);
   };
 
@@ -188,7 +188,7 @@ const WriteDateScreen = ({ navigation }: Props) => {
   const onPressNext = useCallback(() => {
     dispatch(
       setDateReducer({
-        startDate: date.toDateString(),
+        startDate: moment(date).format('YYYY-MM-DD'),
         duration: duration,
       })
     );
@@ -222,11 +222,11 @@ const WriteDateScreen = ({ navigation }: Props) => {
               </DurationText>
             )}
             <DurationAddButton
-              onPress={() => setDuration((prev) => Math.min(prev + 1, 30))}
+              onPress={() => setDuration((prev) => Math.min(prev + 1, 15))}
               onLongPress={startIncrement}
               onPressOut={stopContinuousChange}
               delayLongPress={500}
-              disabled={duration === 30}
+              disabled={duration === 15}
             >
               <Ionicons name="add" size={24} color={colors.textBlack} />
             </DurationAddButton>

@@ -3,7 +3,7 @@ import { colors } from '../colors';
 
 const Container = styled.View`
   flex-direction: row;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 `;
 
 const StepBar = styled.View<{ isCurrentStep: boolean }>`

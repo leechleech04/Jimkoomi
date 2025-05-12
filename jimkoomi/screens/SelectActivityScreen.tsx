@@ -5,9 +5,12 @@ import { RootStackParamList } from '../types';
 import ActivityButton from '../components/ActivityButton';
 import { useCallback, useState } from 'react';
 import { activities } from '../data';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setActivityReducer } from '../tripDataSlice';
 import ProgressBar from '../components/ProgessBar';
+import { RootState } from '../store';
+import { fetchWeatherData } from '../api/openMeteo';
+import moment from 'moment';
 
 const SafeAreaView = styled.SafeAreaView`
   flex: 1;
@@ -91,8 +94,17 @@ const SelectActivityScreen = ({ navigation }: Props) => {
   const [isScrolling, setIsScrolling] = useState<boolean>(false);
   const [selectedActivity, setSelectedActivity] = useState<number[]>([]);
 
+  const { latitude, longitude, startDate, duration } = useSelector(
+    (state: RootState) => state.tripData
+  );
   const onPressNext = useCallback(() => {
     dispatch(setActivityReducer(selectedActivity));
+    const weatherData = fetchWeatherData(
+      latitude,
+      longitude,
+      startDate,
+      duration
+    );
     navigation.navigate('Start');
   }, [selectedActivity, navigation, dispatch]);
 

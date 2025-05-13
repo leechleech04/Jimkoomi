@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from './store';
-import { ChecklistItem } from '../types';
+import { ChecklistItemType } from '../types';
 
-const initialState: { name: string; list: ChecklistItem[] } = {
+const initialState: { name: string; list: ChecklistItemType[] } = {
   name: '',
   list: [],
 };
@@ -15,7 +15,7 @@ export const checklistSlice = createSlice({
     setChecklistName: (state, action: PayloadAction<string>) => {
       state.name = action.payload;
     },
-    addChecklistItem: (state, action: PayloadAction<ChecklistItem>) => {
+    addChecklistItem: (state, action: PayloadAction<ChecklistItemType>) => {
       state.list.push(action.payload);
     },
     removeChecklistItem: (state, action: PayloadAction<number>) => {
@@ -31,6 +31,15 @@ export const checklistSlice = createSlice({
       const item = state.list.find((item) => item.id === action.payload);
       if (item) {
         item.hasReminder = !item.hasReminder;
+      }
+    },
+    setItemName: (
+      state,
+      action: PayloadAction<{ id: number; name: string }>
+    ) => {
+      const item = state.list.find((item) => item.id === action.payload.id);
+      if (item) {
+        item.name = action.payload.name;
       }
     },
     inCreaseQuantity: (state, action: PayloadAction<number>) => {
@@ -57,6 +66,7 @@ export const {
   removeChecklistItem,
   toggleCheckItem,
   toggleReminderItem,
+  setItemName,
   inCreaseQuantity,
   deCreaseQuantity,
   clearChecklist,

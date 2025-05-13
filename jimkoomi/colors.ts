@@ -1,5 +1,3 @@
-import { withTheme } from 'styled-components';
-
 export const colors = {
   blue: '#42C2FF',
   lightBlue: '#85F4FF',
@@ -9,4 +7,5 @@ export const colors = {
   btnGray: '#909090',
   btnRed: '#FF7F7F',
   white: '#FFFFFF',
+  lightGray: '#C0C0C0',
 };

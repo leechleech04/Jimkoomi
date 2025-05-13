@@ -1,13 +1,18 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { ChecklistItem, RootStackParamList } from '../types';
+import { ChecklistItemType, RootStackParamList } from '../types';
 import styled from 'styled-components/native';
 import { colors } from '../colors';
 import { useEffect, useState } from 'react';
 import { createNewChecklist } from '../utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
-import { addChecklistItem } from '../redux/checklistSlice';
+import {
+  addChecklistItem,
+  clearChecklist,
+  setChecklistName,
+} from '../redux/checklistSlice';
 import { ActivityIndicator, Text, View } from 'react-native';
+import ChecklistItem from '../components/ChecklistItem';
 
 const SafeAreaView = styled.SafeAreaView`
   flex: 1;
@@ -17,13 +22,25 @@ const SafeAreaView = styled.SafeAreaView`
 const Container = styled.View`
   flex: 1;
   align-items: center;
-  padding: 20px;
+`;
+
+const TitleInput = styled.TextInput`
+  align-self: stretch;
+  font-size: 24px;
+  color: ${colors.textBlack};
+  font-weight: bold;
+  padding: 20px 10px;
+  border-radius: 16px;
+  background-color: ${colors.white};
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+  elevation: 4;
+  margin: 0 20px;
 `;
 
 const CheckList = styled.FlatList`
   flex-grow: 1;
   align-self: stretch;
-  margin: 40px 0;
+  margin-top: 20px;
 `;
 
 const Comment = styled.Text`
@@ -34,6 +51,7 @@ const Comment = styled.Text`
   line-height: 30px;
   margin-top: 10px;
   align-self: stretch;
+  margin: 20px;
 `;
 
 type Props = NativeStackScreenProps<RootStackParamList, 'CreateChecklist'>;
@@ -41,9 +59,11 @@ type Props = NativeStackScreenProps<RootStackParamList, 'CreateChecklist'>;
 const CreateChecklistScreen = ({ navigation }: Props) => {
   const dispatch = useDispatch();
 
-  const [listItems, setListItems] = useState<ChecklistItem[]>([]);
+  const [listItems, setListItems] = useState<ChecklistItemType[]>([]);
 
   const tripData = useSelector((state: RootState) => state.tripData);
+  const checklist = useSelector((state: RootState) => state.checklist.list);
+  const checklistName = useSelector((state: RootState) => state.checklist.name);
 
   useEffect(() => {
     (async () => {
@@ -59,13 +79,12 @@ const CreateChecklistScreen = ({ navigation }: Props) => {
 
   useEffect(() => {
     if (listItems.length > 0) {
+      dispatch(clearChecklist());
       listItems.forEach((item) => {
         dispatch(addChecklistItem(item));
       });
     }
   }, [listItems]);
-
-  const checklist = useSelector((state: RootState) => state.checklist.list);
 
   if (checklist.length === 0) {
     return (
@@ -90,17 +109,31 @@ const CreateChecklistScreen = ({ navigation }: Props) => {
     <SafeAreaView>
       <Container>
         <Comment>
-          날씨, 이동 수단 등을 고려하여 체크리스트를 생성했습니다.
+          날씨, 이동 수단 등을 고려하여 체크리스트를 생성했어요. 체크리스트를
+          확인하고 필요에 따라 수정해주세요.
         </Comment>
+        <TitleInput
+          placeholder="체크리스트 제목을 입력하세요"
+          value={checklistName}
+          onChangeText={(text: string) => {
+            dispatch(setChecklistName(text));
+          }}
+        />
         <CheckList
           data={checklist}
-          renderItem={({ item }: { item: ChecklistItem }) => (
-            <Text>
-              {item.name} - {item.quantity}개 - id: {item.id}
-            </Text>
+          renderItem={({ item }: { item: ChecklistItemType }) => (
+            <ChecklistItem item={item} />
           )}
-          keyExtractor={(item: ChecklistItem) => item.id}
-          ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
+          keyExtractor={(item: ChecklistItemType) => item.id}
+          ItemSeparatorComponent={() => (
+            <View
+              style={{
+                height: 1,
+                width: '100%',
+                backgroundColor: colors.lightGray,
+              }}
+            />
+          )}
         />
       </Container>
     </SafeAreaView>

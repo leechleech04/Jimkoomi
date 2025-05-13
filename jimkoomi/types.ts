@@ -29,7 +29,7 @@ export interface TripDataState {
   activities: number[];
 }
 
-export interface ChecklistItem {
+export interface ChecklistItemType {
   id: number;
   name: string;
   quantity: number;

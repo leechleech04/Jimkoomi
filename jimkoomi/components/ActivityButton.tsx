@@ -5,19 +5,27 @@ import { useEffect, useRef, useState } from 'react';
 
 const Container = styled(Animated.View)``;
 
-const ActivityItem = styled.Pressable`
-  background-color: ${colors.white};
+const ActivityItem = styled.Pressable<{
+  isPressed: boolean;
+}>`
+  background-color: ${(props: { isPressed: boolean }) =>
+    props.isPressed ? colors.blue : colors.skyBlue};
+  border-width: 2px;
+  border-color: ${(props: { isPressed: boolean }) =>
+    props.isPressed ? colors.skyBlue : colors.blue};
   padding: 20px;
   border-radius: 16px;
   margin: 5px;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
-  elevation: 4;
 `;
 
-const ActivityText = styled.Text`
+const ActivityText = styled.Text<{
+  isPressed: boolean;
+}>`
   font-size: 24px;
   color: ${colors.textBlack};
   font-weight: bold;
+  color: ${(props: { isPressed: boolean }) =>
+    props.isPressed ? colors.white : colors.textBlack};
 `;
 
 const ActivityButton = ({
@@ -77,9 +85,9 @@ const ActivityButton = ({
         key={id}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
-        style={{ backgroundColor: isPressed ? colors.lightBlue : colors.white }}
+        isPressed={isPressed}
       >
-        <ActivityText>{name}</ActivityText>
+        <ActivityText isPressed={isPressed}>{name}</ActivityText>
       </ActivityItem>
     </Container>
   );

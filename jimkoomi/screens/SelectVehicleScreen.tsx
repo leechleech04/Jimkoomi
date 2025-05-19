@@ -34,7 +34,7 @@ const Title = styled.Text`
 const Comment = styled.Text`
   font-size: 20px;
   color: ${colors.textGray};
-  font-weight: bold;
+  font-weight: 600;
   line-height: 30px;
   margin-top: 10px;
 `;

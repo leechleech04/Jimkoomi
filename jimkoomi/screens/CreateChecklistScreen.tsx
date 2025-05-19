@@ -47,11 +47,24 @@ const Comment = styled.Text`
   text-align: left;
   font-size: 20px;
   color: ${colors.textGray};
-  font-weight: bold;
+  font-weight: 600;
   line-height: 30px;
   margin-top: 10px;
   align-self: stretch;
   margin: 20px;
+`;
+
+const SaveButton = styled.Pressable`
+  background-color: ${colors.blue};
+  border-radius: 16px;
+  padding: 20px 15px;
+  margin-top: 10px;
+`;
+
+const SaveButtonText = styled.Text`
+  font-size: 24px;
+  color: ${colors.white};
+  font-weight: bold;
 `;
 
 type Props = NativeStackScreenProps<RootStackParamList, 'CreateChecklist'>;
@@ -135,6 +148,9 @@ const CreateChecklistScreen = ({ navigation }: Props) => {
             />
           )}
         />
+        <SaveButton>
+          <SaveButtonText>체크리스트 저장</SaveButtonText>
+        </SaveButton>
       </Container>
     </SafeAreaView>
   );

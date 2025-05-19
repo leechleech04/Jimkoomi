@@ -4,19 +4,23 @@ import { Image } from 'expo-image';
 import { VehicleItem } from '../types';
 import { useEffect, useRef, useState } from 'react';
 import { Animated } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 
 const Container = styled(Animated.View)``;
 
-const Vehicle = styled.Pressable`
+const Vehicle = styled.Pressable<{
+  isPressed: boolean;
+}>`
   width: 100%;
   flex-direction: row;
   align-items: center;
   border-radius: 16px;
   padding: 5px;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
-  background-color: ${colors.white};
+  background-color: ${(props: { isPressed: boolean }) =>
+    props.isPressed ? colors.blue : colors.skyBlue};
+  border-width: 2px;
+  border-color: ${(props: { isPressed: boolean }) =>
+    props.isPressed ? colors.skyBlue : colors.blue};
 `;
 
 const VehicleImage = styled(Image)`
@@ -30,15 +34,6 @@ const VehicleText = styled.Text`
   font-weight: bold;
   margin-left: 40px;
   flex-grow: 1;
-`;
-
-const GradientBackground = styled(LinearGradient)`
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  border-radius: 16px;
 `;
 
 const VehicleButton = ({
@@ -92,14 +87,11 @@ const VehicleButton = ({
 
   return (
     <Container style={{ transform: [{ scale: ButtonScale }] }}>
-      <Vehicle onPressIn={handlePressIn} onPressOut={handlePressOut}>
-        {isPressed ? (
-          <GradientBackground
-            colors={[colors.white, colors.lightBlue]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-          />
-        ) : null}
+      <Vehicle
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        isPressed={isPressed}
+      >
         <VehicleImage source={vehicle.image} />
         <VehicleText>{vehicle.name}</VehicleText>
         {isPressed && (

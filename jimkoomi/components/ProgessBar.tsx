@@ -3,16 +3,15 @@ import { colors } from '../colors';
 
 const Container = styled.View`
   flex-direction: row;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
+  border-radius: 3px;
 `;
 
 const StepBar = styled.View<{ isCurrentStep: boolean }>`
   height: 3px;
   flex-grow: 1;
-  margin: 0 1px;
   background-color: ${(props: { isCurrentStep: boolean }) =>
     props.isCurrentStep ? colors.blue : colors.btnGray};
-  border-radius: 3px;
 `;
 
 const ProgressBar = ({ step }: { step: number }) => {

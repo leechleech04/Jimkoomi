@@ -2,7 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ChecklistItemType, RootStackParamList } from '../types';
 import styled from 'styled-components/native';
 import { colors } from '../colors';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { createNewChecklist } from '../utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
@@ -11,7 +11,7 @@ import {
   clearChecklist,
   setChecklistName,
 } from '../redux/checklistSlice';
-import { ActivityIndicator, Alert, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, View } from 'react-native';
 import ChecklistItem from '../components/ChecklistItem';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 

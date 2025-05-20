@@ -35,6 +35,15 @@ export const tripDataSlice = createSlice({
     setActivitiesReducer: (state, action: PayloadAction<number[]>) => {
       state.activities = action.payload;
     },
+    clearTripData: (state) => {
+      state.fullAddress = '';
+      state.latitude = 0;
+      state.longitude = 0;
+      state.startDate = '';
+      state.duration = 1;
+      state.vehicles = [];
+      state.activities = [];
+    },
   },
 });
 
@@ -43,6 +52,7 @@ export const {
   setDateReducer,
   setVehiclesReducer,
   setActivitiesReducer,
+  clearTripData,
 } = tripDataSlice.actions;
 
 export default tripDataSlice.reducer;

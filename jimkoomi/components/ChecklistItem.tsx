@@ -46,7 +46,9 @@ const NameInput = styled.TextInput`
   font-weight: bold;
 `;
 
-const ReviseButton = styled.Pressable``;
+const ReviseButton = styled.Pressable`
+  margin-left: 5px;
+`;
 
 const QuantityButton = styled.Pressable``;
 

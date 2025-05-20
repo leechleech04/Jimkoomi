@@ -2,13 +2,14 @@ import styled from 'styled-components/native';
 import { colors } from '../colors';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { LocationData, RootStackParamList } from '../types';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import { ActivityIndicator, Alert } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { setLocationReducer } from '../redux/tripDataSlice';
+import { clearTripData, setLocationReducer } from '../redux/tripDataSlice';
 import { fetchLocationData } from '../api/mapbox';
 import ProgressBar from '../components/ProgessBar';
+import { clearChecklist } from '../redux/checklistSlice';
 
 const SafeAreaView = styled.SafeAreaView`
   flex: 1;
@@ -85,6 +86,11 @@ const WriteDestinationScreen = ({ navigation }: Props) => {
   const [destination, setDestination] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [locationData, setLocationData] = useState<LocationData | null>(null);
+
+  useEffect(() => {
+    dispatch(clearChecklist());
+    dispatch(clearTripData());
+  }, []);
 
   const validateLocation = useCallback(async () => {
     if (destination.length === 0) {

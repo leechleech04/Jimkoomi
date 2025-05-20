@@ -5,6 +5,7 @@ export type RootStackParamList = {
   SelectVehicle: undefined;
   SelectActivity: undefined;
   CreateChecklist: undefined;
+  Home: undefined;
 };
 
 export interface VehicleItem {

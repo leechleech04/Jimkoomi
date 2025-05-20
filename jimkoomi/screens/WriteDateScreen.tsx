@@ -11,6 +11,7 @@ import { useDispatch } from 'react-redux';
 import { setDateReducer } from '../redux/tripDataSlice';
 import ProgressBar from '../components/ProgessBar';
 import moment from 'moment';
+import { View } from 'react-native';
 
 const SafeAreaView = styled.SafeAreaView`
   flex: 1;
@@ -240,12 +241,13 @@ const WriteDateScreen = ({ navigation }: Props) => {
               })}
             </DateText>
           </DateButton>
+          <View style={{ height: 20 }} />
           {showPicker && (
             <DateTimePicker
               testID="dateTimePicker"
               value={date}
               mode={'date'}
-              display="spinner"
+              display="default"
               onChange={onChange}
               minimumDate={new Date()}
               locale="ko-KR"

@@ -11,8 +11,9 @@ import {
   clearChecklist,
   setChecklistName,
 } from '../redux/checklistSlice';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Text, View } from 'react-native';
 import ChecklistItem from '../components/ChecklistItem';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SafeAreaView = styled.SafeAreaView`
   flex: 1;
@@ -72,8 +73,6 @@ type Props = NativeStackScreenProps<RootStackParamList, 'CreateChecklist'>;
 const CreateChecklistScreen = ({ navigation }: Props) => {
   const dispatch = useDispatch();
 
-  const [listItems, setListItems] = useState<ChecklistItemType[]>([]);
-
   const tripData = useSelector((state: RootState) => state.tripData);
   const checklist = useSelector((state: RootState) => state.checklist.list);
   const checklistName = useSelector((state: RootState) => state.checklist.name);
@@ -82,22 +81,66 @@ const CreateChecklistScreen = ({ navigation }: Props) => {
     (async () => {
       try {
         const result = await createNewChecklist(tripData);
-
-        setListItems(result);
+        dispatch(clearChecklist());
+        result.forEach((item: ChecklistItemType) => {
+          dispatch(addChecklistItem(item));
+        });
       } catch (error) {
         console.error('체크리스트 생성 오류:', error);
       }
     })();
   }, []);
 
-  useEffect(() => {
-    if (listItems.length > 0) {
-      dispatch(clearChecklist());
-      listItems.forEach((item) => {
-        dispatch(addChecklistItem(item));
-      });
+  const handlepressSaveButton = async () => {
+    if (checklistName.length === 0) {
+      Alert.alert('체크리스트 제목을 입력해주세요.', '', [
+        { text: '확인', style: 'default' },
+      ]);
+      return;
+    } else {
+      try {
+        const existingChecklist = await AsyncStorage.getItem(
+          'jimkoomiChecklist'
+        );
+        const parsedExistingChecklist = existingChecklist
+          ? JSON.parse(existingChecklist)
+          : {};
+
+        const newChecklistData = {
+          tripData,
+          checklist: {
+            name: checklistName,
+            list: checklist,
+          },
+        };
+
+        if (parsedExistingChecklist[checklistName]) {
+          Alert.alert('이미 존재하는 제목입니다.', '', [
+            { text: '확인', style: 'default' },
+          ]);
+          return;
+        } else {
+          parsedExistingChecklist[checklistName] = newChecklistData;
+        }
+        await AsyncStorage.setItem(
+          'jimkoomiChecklist',
+          JSON.stringify(parsedExistingChecklist)
+        );
+        Alert.alert('체크리스트가 저장되었습니다.', '', [
+          {
+            text: '확인',
+            onPress: () => {
+              navigation.navigate('Home');
+            },
+          },
+        ]);
+      } catch (error) {
+        Alert.alert('체크리스트 저장 중 오류가 발생했습니다.', '', [
+          { text: '확인', style: 'default' },
+        ]);
+      }
     }
-  }, [listItems]);
+  };
 
   if (checklist.length === 0) {
     return (
@@ -148,7 +191,7 @@ const CreateChecklistScreen = ({ navigation }: Props) => {
             />
           )}
         />
-        <SaveButton>
+        <SaveButton onPress={handlepressSaveButton}>
           <SaveButtonText>체크리스트 저장</SaveButtonText>
         </SaveButton>
       </Container>

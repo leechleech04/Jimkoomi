@@ -6,10 +6,11 @@ import SelectVehicleScreen from '../screens/SelectVehicleScreen';
 import SelectActivityScreen from '../screens/SelectActivityScreen';
 import { RootStackParamList } from '../types';
 import CreateChecklistScreen from '../screens/CreateChecklistScreen';
+import HomeScreen from '../screens/HomeScreen';
 
 const MyStack = createNativeStackNavigator<RootStackParamList>();
 
-function Stack() {
+const Stack = () => {
   return (
     <MyStack.Navigator
       screenOptions={{
@@ -30,8 +31,9 @@ function Stack() {
         name="CreateChecklist"
         component={CreateChecklistScreen}
       />
+      <MyStack.Screen name="Home" component={HomeScreen} />
     </MyStack.Navigator>
   );
-}
+};
 
 export default Stack;

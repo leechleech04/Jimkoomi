@@ -8,6 +8,7 @@ import { Asset } from 'expo-asset';
 import { ActivityIndicator, Alert, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
+import store from '../redux/store';
 
 const SafeAreaView = styled.SafeAreaView`
   flex: 1;
@@ -62,16 +63,24 @@ const ChecklistList = styled.FlatList`
 
 const ChecklistButton = styled.Pressable`
   background-color: ${colors.white};
-  flex-direction: row;
   align-items: center;
-  padding: 20px 10px;
+  padding: 10px 20px;
 `;
 
 const ChecklistButtonText = styled.Text`
   font-size: 24px;
   color: ${colors.textBlack};
   font-weight: bold;
-  text-align: center;
+  align-self: stretch;
+`;
+
+const ChecklistButtonSubText = styled.Text`
+  font-size: 16px;
+  color: ${colors.textGray};
+  flex-grow: 1;
+  align-self: stretch;
+  margin-top: 5px;
+  font-weight: 600;
 `;
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
@@ -116,7 +125,13 @@ const HomeScreen = ({ navigation }: Props) => {
       try {
         const storedChecklist = await AsyncStorage.getItem('jimkoomiChecklist');
         if (storedChecklist) {
-          setStoredChecklist(JSON.parse(storedChecklist));
+          const parsedChecklist = JSON.parse(storedChecklist);
+          const checklistArray = Object.keys(parsedChecklist).map((key) => ({
+            id: key,
+            ...parsedChecklist[key],
+          }));
+          setStoredChecklist(checklistArray);
+          console.log(storedChecklist);
         }
       } catch (error) {
         Alert.alert('체크리스트를 불러오는 중 오류가 발생했습니다.', '', [
@@ -162,20 +177,22 @@ const HomeScreen = ({ navigation }: Props) => {
           </CreateChecklistButtonText>
         </CreateChecklistButton>
         <ChecklistList
-          data={Object.keys(storedChecklist)}
-          renderItem={({ item }: { item: string }) => (
+          data={storedChecklist}
+          renderItem={({ item }: { item: any }) => (
             <ChecklistButton
               onPress={() => {
-                navigation.navigate('ChecklistDetail', {
-                  checklistName: item,
-                  checklistData: storedChecklist[item],
-                });
+                // navigation.navigate('ChecklistDetail', item);
               }}
             >
-              <ChecklistButtonText>{item}</ChecklistButtonText>
+              <ChecklistButtonText numberOfLines={1} ellipsizeMode="tail">
+                {item.id}
+              </ChecklistButtonText>
+              <ChecklistButtonSubText numberOfLines={1} ellipsizeMode="tail">
+                {item.tripData.startDate} {item.tripData.fullAddress}
+              </ChecklistButtonSubText>
             </ChecklistButton>
           )}
-          keyExtractor={(item: string) => item}
+          keyExtractor={(item: any) => item.id}
           ItemSeparatorComponent={() => (
             <View
               style={{

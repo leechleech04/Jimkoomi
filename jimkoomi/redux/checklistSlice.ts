@@ -56,6 +56,7 @@ export const checklistSlice = createSlice({
     },
     clearChecklist: (state) => {
       state.list = [];
+      state.name = '';
     },
   },
 });

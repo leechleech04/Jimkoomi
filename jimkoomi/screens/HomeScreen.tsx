@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../types';
+import { RootStackParamList, StoredChecklistType } from '../types';
 import styled from 'styled-components/native';
 import { colors } from '../colors';
 import { Image } from 'expo-image';
@@ -24,6 +24,7 @@ const Container = styled.View`
 const Header = styled.View`
   flex-direction: row;
   align-self: stretch;
+  margin-bottom: 20px;
 `;
 
 const LogoImage = styled(Image)`
@@ -35,7 +36,6 @@ const LogoImage = styled(Image)`
 const TextImage = styled(Image)`
   width: ${36 * (678 / 242)}px;
   height: 36px;
-  margin-bottom: 30px;
 `;
 
 const CreateChecklistButton = styled.Pressable`
@@ -58,7 +58,7 @@ const CreateChecklistButtonText = styled.Text`
 const ChecklistList = styled.FlatList`
   flex-grow: 1;
   align-self: stretch;
-  margin: 20px 0;
+  margin-top: 20px;
 `;
 
 const ChecklistButton = styled.Pressable`
@@ -86,6 +86,16 @@ const ChecklistButtonSubText = styled.Text`
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 const HomeScreen = ({ navigation }: Props) => {
+  // useEffect(() => {
+  //   const removeValue = async () => {
+  //     try {
+  //       await AsyncStorage.removeItem('jimkoomiChecklist');
+  //     } catch (e) {
+  //       console.error(e);
+  //     }
+  //   };
+  //   removeValue();
+  // }, []);
   const [imagesLoaded, setImagesLoaded] = useState<boolean>(false);
 
   useEffect(() => {
@@ -118,7 +128,9 @@ const HomeScreen = ({ navigation }: Props) => {
     };
   }, []);
 
-  const [storedChecklist, setStoredChecklist] = useState<any[]>([]);
+  const [storedChecklist, setStoredChecklist] = useState<StoredChecklistType[]>(
+    []
+  );
 
   useEffect(() => {
     const getChecklist = async () => {
@@ -127,11 +139,9 @@ const HomeScreen = ({ navigation }: Props) => {
         if (storedChecklist) {
           const parsedChecklist = JSON.parse(storedChecklist);
           const checklistArray = Object.keys(parsedChecklist).map((key) => ({
-            id: key,
             ...parsedChecklist[key],
           }));
           setStoredChecklist(checklistArray);
-          console.log(storedChecklist);
         }
       } catch (error) {
         Alert.alert('체크리스트를 불러오는 중 오류가 발생했습니다.', '', [
@@ -178,21 +188,23 @@ const HomeScreen = ({ navigation }: Props) => {
         </CreateChecklistButton>
         <ChecklistList
           data={storedChecklist}
-          renderItem={({ item }: { item: any }) => (
+          renderItem={({ item }: { item: StoredChecklistType }) => (
             <ChecklistButton
               onPress={() => {
-                // navigation.navigate('ChecklistDetail', item);
+                navigation.navigate('ChecklistDetail', {
+                  name: item.checklist.name,
+                });
               }}
             >
               <ChecklistButtonText numberOfLines={1} ellipsizeMode="tail">
-                {item.id}
+                {item.checklist.name}
               </ChecklistButtonText>
               <ChecklistButtonSubText numberOfLines={1} ellipsizeMode="tail">
                 {item.tripData.startDate} {item.tripData.fullAddress}
               </ChecklistButtonSubText>
             </ChecklistButton>
           )}
-          keyExtractor={(item: any) => item.id}
+          keyExtractor={(item: StoredChecklistType) => item.checklist.name}
           ItemSeparatorComponent={() => (
             <View
               style={{

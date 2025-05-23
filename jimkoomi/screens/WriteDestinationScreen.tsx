@@ -63,19 +63,38 @@ const LocationName = styled.Text`
   padding: 20px 10px;
 `;
 
-const NextButton = styled.Pressable<{ disabled: boolean }>`
+const ButtonBox = styled.View`
   align-self: stretch;
-  background-color: ${(props: { disabled: boolean }) =>
-    props.disabled ? colors.btnGray : colors.blue};
+  flex-direction: row;
+`;
+
+const Button = styled.Pressable`
+  flex-grow: 1;
   border-radius: 16px;
   padding: 20px 10px;
 `;
 
-const NextButtonText = styled.Text`
+const BackButton = styled(Button)`
+  background-color: ${colors.btnGray};
+  margin-right: 10px;
+`;
+
+const NextButton = styled(Button)`
+  background-color: ${colors.blue};
+`;
+
+const ButtonText = styled.Text`
   font-size: 24px;
-  color: ${colors.textBlack};
   font-weight: bold;
   text-align: center;
+`;
+
+const BackButtonText = styled(ButtonText)`
+  color: ${colors.white};
+`;
+
+const NextButtonText = styled(ButtonText)`
+  color: ${colors.textBlack};
 `;
 
 type Props = NativeStackScreenProps<RootStackParamList, 'WriteDestination'>;
@@ -157,12 +176,14 @@ const WriteDestinationScreen = ({ navigation }: Props) => {
             <LocationName>목적지: {locationData.fullAddress}</LocationName>
           ) : null}
         </ContentBox>
-        <NextButton
-          disabled={isLoading || locationData === null}
-          onPress={onPressNext}
-        >
-          <NextButtonText>다음</NextButtonText>
-        </NextButton>
+        <ButtonBox>
+          <BackButton onPress={() => navigation.goBack()}>
+            <BackButtonText>이전</BackButtonText>
+          </BackButton>
+          <NextButton onPress={onPressNext}>
+            <NextButtonText>다음</NextButtonText>
+          </NextButton>
+        </ButtonBox>
       </Container>
     </SafeAreaView>
   );

@@ -12,8 +12,8 @@ import {
   setChecklistName,
 } from '../redux/checklistSlice';
 import { ActivityIndicator, Alert, View } from 'react-native';
-import ChecklistItem from '../components/ChecklistItem';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import CreatedChecklistItem from '../components/CreatedChecklistItem';
 
 const SafeAreaView = styled.SafeAreaView`
   flex: 1;
@@ -178,7 +178,7 @@ const CreateChecklistScreen = ({ navigation }: Props) => {
         <CheckList
           data={checklist}
           renderItem={({ item }: { item: ChecklistItemType }) => (
-            <ChecklistItem item={item} />
+            <CreatedChecklistItem item={item} />
           )}
           keyExtractor={(item: ChecklistItemType) => item.id}
           ItemSeparatorComponent={() => (

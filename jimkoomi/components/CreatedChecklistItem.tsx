@@ -63,7 +63,7 @@ const QuantityText = styled.Text`
   margin: 0 10px;
 `;
 
-const ChecklistItem = ({ item }: { item: ChecklistItemType }) => {
+const CreatedChecklistItem = ({ item }: { item: ChecklistItemType }) => {
   const dispatch = useDispatch();
 
   const [isEditable, setIsEditable] = useState(false);
@@ -144,4 +144,4 @@ const ChecklistItem = ({ item }: { item: ChecklistItemType }) => {
   );
 };
 
-export default ChecklistItem;
+export default CreatedChecklistItem;

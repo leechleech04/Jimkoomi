@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ActivityIndicator, View } from 'react-native';
 import { colors } from '../colors';
+import ChecklistDetailScreen from '../screens/ChecklistDetailScreen';
 
 const MyStack = createNativeStackNavigator<RootStackParamList>();
 
@@ -78,6 +79,10 @@ const Stack = () => {
         component={CreateChecklistScreen}
       />
       <MyStack.Screen name="Home" component={HomeScreen} />
+      <MyStack.Screen
+        name="ChecklistDetail"
+        component={ChecklistDetailScreen}
+      />
     </MyStack.Navigator>
   );
 };

@@ -12,6 +12,9 @@ export const checklistSlice = createSlice({
   name: 'checklist',
   initialState,
   reducers: {
+    setChecklist: (state, action: PayloadAction<ChecklistItemType[]>) => {
+      state.list = action.payload;
+    },
     setChecklistName: (state, action: PayloadAction<string>) => {
       state.name = action.payload;
     },
@@ -62,6 +65,7 @@ export const checklistSlice = createSlice({
 });
 
 export const {
+  setChecklist,
   setChecklistName,
   addChecklistItem,
   removeChecklistItem,

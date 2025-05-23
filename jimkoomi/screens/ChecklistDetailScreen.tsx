@@ -10,7 +10,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import HomeChecklistItem from '../components/HomeChecklistItem';
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChecklist, setChecklistName } from '../redux/checklistSlice';
 import { setTripData } from '../redux/tripDataSlice';
@@ -42,6 +42,32 @@ const Title = styled.Text`
   color: ${colors.textBlack};
   font-weight: bold;
   flex-shrink: 1;
+`;
+
+const ButtonBox = styled.View`
+  flex-direction: row;
+  margin-left: auto;
+  align-items: center;
+`;
+
+const DeleteButton = styled.Pressable`
+  background-color: ${colors.btnRed};
+  padding: 10px;
+  border-radius: 8px;
+`;
+
+const ButtonText = styled.Text`
+  color: ${colors.white};
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+`;
+
+const EditButton = styled.Pressable`
+  background-color: ${colors.blue};
+  padding: 10px;
+  border-radius: 8px;
+  margin-left: 10px;
 `;
 
 const SubTitleBox = styled.View`
@@ -119,6 +145,35 @@ const ChecklistDetailScreen = ({ route, navigation }: Props) => {
     })();
   }, [checklist]);
 
+  const handlePressDelete = async () => {
+    Alert.alert('체크리스트를 삭제하시겠습니까?', '', [
+      { text: '취소', style: 'cancel' },
+      { text: '삭제', style: 'destructive', onPress: deleteChecklist },
+    ]);
+  };
+
+  const deleteChecklist = async () => {
+    try {
+      const existingChecklists = await AsyncStorage.getItem(
+        'jimkoomiChecklist'
+      );
+      const parsedExistingChecklists = existingChecklists
+        ? JSON.parse(existingChecklists)
+        : {};
+
+      delete parsedExistingChecklists[checklist.name];
+      await AsyncStorage.setItem(
+        'jimkoomiChecklist',
+        JSON.stringify(parsedExistingChecklists)
+      );
+    } catch (error) {
+      console.error(error);
+    }
+    navigation.goBack();
+  };
+
+  const handlePressEdit = () => {};
+
   return (
     <SafeAreaView>
       <Container>
@@ -129,6 +184,14 @@ const ChecklistDetailScreen = ({ route, navigation }: Props) => {
           <Title numberOfLines={1} ellipsizeMode="tail">
             {checklist.name}
           </Title>
+          <ButtonBox>
+            <DeleteButton onPress={handlePressDelete}>
+              <ButtonText>삭제</ButtonText>
+            </DeleteButton>
+            <EditButton onPress={handlePressEdit}>
+              <ButtonText>편집</ButtonText>
+            </EditButton>
+          </ButtonBox>
         </Header>
         <SubTitleBox>
           <SubTitle numberOfLines={1} ellipsizeMode="tail">

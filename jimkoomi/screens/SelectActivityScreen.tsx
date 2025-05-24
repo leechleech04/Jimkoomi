@@ -96,7 +96,9 @@ const SelectActivityScreen = ({ navigation }: Props) => {
 
   const onPressNext = useCallback(() => {
     dispatch(setActivitiesReducer(selectedActivity));
-    navigation.navigate('CreateChecklist');
+    navigation.navigate('CreateChecklist', {
+      isNewList: true,
+    });
   }, [selectedActivity, navigation, dispatch]);
 
   return (

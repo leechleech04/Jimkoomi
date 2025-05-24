@@ -1,20 +1,17 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import {
-  ChecklistItemType,
-  RootStackParamList,
-  StoredChecklistType,
-} from '../types';
+import { ChecklistItemType, RootStackParamList } from '../types';
 import styled from 'styled-components/native';
 import { colors } from '../colors';
 import { Ionicons } from '@expo/vector-icons';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import HomeChecklistItem from '../components/HomeChecklistItem';
-import { Alert, View } from 'react-native';
+import { Alert } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChecklist, setChecklistName } from '../redux/checklistSlice';
 import { setTripData } from '../redux/tripDataSlice';
 import { RootState } from '../redux/store';
+
 const SafeAreaView = styled.SafeAreaView`
   flex: 1;
   background-color: ${colors.skyBlue};
@@ -33,7 +30,6 @@ const Header = styled.View`
 `;
 
 const ExitButton = styled.Pressable`
-  margin-right: 10px;
   transform: rotateY(180deg);
 `;
 
@@ -42,6 +38,7 @@ const Title = styled.Text`
   color: ${colors.textBlack};
   font-weight: bold;
   flex-shrink: 1;
+  margin: 0 10px;
 `;
 
 const ButtonBox = styled.View`
@@ -172,7 +169,11 @@ const ChecklistDetailScreen = ({ route, navigation }: Props) => {
     navigation.goBack();
   };
 
-  const handlePressEdit = () => {};
+  const handlePressEdit = () => {
+    navigation.navigate('CreateChecklist', {
+      isNewList: false,
+    });
+  };
 
   return (
     <SafeAreaView>

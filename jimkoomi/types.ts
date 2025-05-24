@@ -4,7 +4,7 @@ export type RootStackParamList = {
   WriteDate: undefined;
   SelectVehicle: undefined;
   SelectActivity: undefined;
-  CreateChecklist: undefined;
+  CreateChecklist: { isNewList: boolean };
   Home: undefined;
   ChecklistDetail: { name: string };
 };

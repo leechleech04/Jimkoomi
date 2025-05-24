@@ -1,12 +1,11 @@
 import styled from 'styled-components/native';
-import { ChecklistItemType, StoredChecklistType } from '../types';
+import { ChecklistItemType } from '../types';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../colors';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { toggleCheckItem, toggleReminderItem } from '../redux/checklistSlice';
-import { useEffect } from 'react';
-import { RootState } from '../redux/store';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
 
 const Container = styled.View`
   width: 100%;
@@ -15,7 +14,9 @@ const Container = styled.View`
   align-items: center;
 `;
 
-const CheckButton = styled.Pressable``;
+const CheckButton = styled.Pressable`
+  flex-direction: row;
+`;
 
 const ItemName = styled.Text`
   font-size: 24px;
@@ -53,10 +54,10 @@ const HomeChecklistItem = ({ item }: { item: ChecklistItemType }) => {
           size={24}
           color={item.isChecked ? colors.blue : 'black'}
         />
+        <ItemName numberOfLines={1} ellipsizeMode="tail">
+          {item.name}
+        </ItemName>
       </CheckButton>
-      <ItemName numberOfLines={1} ellipsizeMode="tail">
-        {item.name}
-      </ItemName>
       <ItemQuantity>{item.quantity}</ItemQuantity>
       <ReminderButton onPress={handleReminder}>
         <Ionicons

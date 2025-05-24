@@ -37,6 +37,7 @@ const TitleInput = styled.TextInput`
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
   elevation: 4;
   margin: 0 20px;
+  margin-top: 20px;
 `;
 
 const AddItemButton = styled.Pressable`
@@ -66,9 +67,8 @@ const Comment = styled.Text`
   color: ${colors.textGray};
   font-weight: 600;
   line-height: 30px;
-  margin-top: 10px;
   align-self: stretch;
-  margin: 20px;
+  margin-top: 20px;
 `;
 
 const SaveButton = styled.Pressable`
@@ -86,28 +86,32 @@ const SaveButtonText = styled.Text`
 
 type Props = NativeStackScreenProps<RootStackParamList, 'CreateChecklist'>;
 
-const CreateChecklistScreen = ({ navigation }: Props) => {
+const CreateChecklistScreen = ({ route, navigation }: Props) => {
+  const { isNewList } = route.params;
+
   const dispatch = useDispatch();
 
   const tripData = useSelector((state: RootState) => state.tripData);
   const checklist = useSelector((state: RootState) => state.checklist.list);
   const checklistName = useSelector((state: RootState) => state.checklist.name);
 
-  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [isLoaded, setIsLoaded] = useState<boolean>(!isNewList);
 
   useEffect(() => {
-    (async () => {
-      try {
-        const result = await createNewChecklist(tripData);
-        dispatch(clearChecklist());
-        result.forEach((item: ChecklistItemType) => {
-          dispatch(addChecklistItem(item));
-        });
-        setIsLoaded(true);
-      } catch (error) {
-        console.error('체크리스트 생성 오류:', error);
-      }
-    })();
+    if (isNewList) {
+      (async () => {
+        try {
+          const result = await createNewChecklist(tripData);
+          dispatch(clearChecklist());
+          result.forEach((item: ChecklistItemType) => {
+            dispatch(addChecklistItem(item));
+          });
+          setIsLoaded(true);
+        } catch (error) {
+          console.error('체크리스트 생성 오류:', error);
+        }
+      })();
+    }
   }, []);
 
   const handlePressSaveButton = async () => {
@@ -124,6 +128,10 @@ const CreateChecklistScreen = ({ navigation }: Props) => {
         const parsedExistingChecklist = existingChecklist
           ? JSON.parse(existingChecklist)
           : {};
+
+        if (!isNewList) {
+          delete parsedExistingChecklist[checklistName];
+        }
 
         const newChecklistData = {
           tripData,
@@ -149,7 +157,10 @@ const CreateChecklistScreen = ({ navigation }: Props) => {
           {
             text: '확인',
             onPress: () => {
-              navigation.navigate('Home');
+              navigation.reset({
+                index: 0,
+                routes: [{ name: 'Home' }],
+              });
             },
           },
         ]);
@@ -198,10 +209,12 @@ const CreateChecklistScreen = ({ navigation }: Props) => {
   return (
     <SafeAreaView>
       <Container>
-        <Comment>
-          날씨, 이동 수단 등을 고려하여 체크리스트를 생성했어요. 체크리스트를
-          확인하고 필요에 따라 수정해주세요.
-        </Comment>
+        {isNewList ? (
+          <Comment>
+            날씨, 이동 수단 등을 고려하여 체크리스트를 생성했어요. 체크리스트를
+            확인하고 필요에 따라 수정해주세요.
+          </Comment>
+        ) : null}
         <TitleInput
           placeholder="체크리스트 제목을 입력하세요"
           value={checklistName}
@@ -238,7 +251,11 @@ const CreateChecklistScreen = ({ navigation }: Props) => {
           )}
         />
         <SaveButton onPress={handlePressSaveButton}>
-          <SaveButtonText>체크리스트 저장</SaveButtonText>
+          {isNewList ? (
+            <SaveButtonText>체크리스트 저장</SaveButtonText>
+          ) : (
+            <SaveButtonText>체크리스트 수정</SaveButtonText>
+          )}
         </SaveButton>
       </Container>
     </SafeAreaView>

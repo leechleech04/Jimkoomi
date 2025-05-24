@@ -2,7 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ChecklistItemType, RootStackParamList } from '../types';
 import styled from 'styled-components/native';
 import { colors } from '../colors';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { createNewChecklist } from '../utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
@@ -14,6 +14,7 @@ import {
 import { ActivityIndicator, Alert, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CreatedChecklistItem from '../components/CreatedChecklistItem';
+import { Ionicons } from '@expo/vector-icons';
 
 const SafeAreaView = styled.SafeAreaView`
   flex: 1;
@@ -36,6 +37,21 @@ const TitleInput = styled.TextInput`
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
   elevation: 4;
   margin: 0 20px;
+`;
+
+const AddItemButton = styled.Pressable`
+  width: 100%;
+  background-color: ${colors.blue};
+  flex-direction: row;
+  align-items: center;
+  padding: 20px;
+`;
+
+const AddItemButtonText = styled.Text`
+  font-size: 24px;
+  color: ${colors.white};
+  font-weight: bold;
+  margin-left: 20px;
 `;
 
 const CheckList = styled.FlatList`
@@ -77,6 +93,8 @@ const CreateChecklistScreen = ({ navigation }: Props) => {
   const checklist = useSelector((state: RootState) => state.checklist.list);
   const checklistName = useSelector((state: RootState) => state.checklist.name);
 
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+
   useEffect(() => {
     (async () => {
       try {
@@ -85,13 +103,14 @@ const CreateChecklistScreen = ({ navigation }: Props) => {
         result.forEach((item: ChecklistItemType) => {
           dispatch(addChecklistItem(item));
         });
+        setIsLoaded(true);
       } catch (error) {
         console.error('체크리스트 생성 오류:', error);
       }
     })();
   }, []);
 
-  const handlepressSaveButton = async () => {
+  const handlePressSaveButton = async () => {
     if (checklistName.length === 0) {
       Alert.alert('체크리스트 제목을 입력해주세요.', '', [
         { text: '확인', style: 'default' },
@@ -142,7 +161,22 @@ const CreateChecklistScreen = ({ navigation }: Props) => {
     }
   };
 
-  if (checklist.length === 0) {
+  const handlePressAddButton = () => {
+    const id = checklist[checklist.length - 1].id
+      ? checklist[checklist.length - 1].id + 1
+      : 0;
+    dispatch(
+      addChecklistItem({
+        id,
+        name: '',
+        quantity: 1,
+        isChecked: false,
+        hasReminder: false,
+      })
+    );
+  };
+
+  if (!isLoaded) {
     return (
       <SafeAreaView>
         <Container>
@@ -190,8 +224,20 @@ const CreateChecklistScreen = ({ navigation }: Props) => {
               }}
             />
           )}
+          ListFooterComponent={() => (
+            <AddItemButton>
+              <Ionicons
+                name="add-circle-outline"
+                size={24}
+                color={colors.white}
+              />
+              <AddItemButtonText onPress={handlePressAddButton}>
+                항목 추가
+              </AddItemButtonText>
+            </AddItemButton>
+          )}
         />
-        <SaveButton onPress={handlepressSaveButton}>
+        <SaveButton onPress={handlePressSaveButton}>
           <SaveButtonText>체크리스트 저장</SaveButtonText>
         </SaveButton>
       </Container>

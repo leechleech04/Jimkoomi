@@ -3,12 +3,13 @@ import { RootStackParamList, StoredChecklistType } from '../types';
 import styled from 'styled-components/native';
 import { colors } from '../colors';
 import { Image } from 'expo-image';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Asset } from 'expo-asset';
 import { ActivityIndicator, Alert, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import store from '../redux/store';
+import { useFocusEffect } from '@react-navigation/native';
 
 const SafeAreaView = styled.SafeAreaView`
   flex: 1;
@@ -132,26 +133,30 @@ const HomeScreen = ({ navigation }: Props) => {
     []
   );
 
-  useEffect(() => {
-    const getChecklist = async () => {
-      try {
-        const storedChecklist = await AsyncStorage.getItem('jimkoomiChecklist');
-        if (storedChecklist) {
-          const parsedChecklist = JSON.parse(storedChecklist);
-          const checklistArray = Object.keys(parsedChecklist).map((key) => ({
-            ...parsedChecklist[key],
-          }));
-          setStoredChecklist(checklistArray);
+  useFocusEffect(
+    useCallback(() => {
+      const getChecklist = async () => {
+        try {
+          const storedChecklist = await AsyncStorage.getItem(
+            'jimkoomiChecklist'
+          );
+          if (storedChecklist) {
+            const parsedChecklist = JSON.parse(storedChecklist);
+            const checklistArray = Object.keys(parsedChecklist).map((key) => ({
+              ...parsedChecklist[key],
+            }));
+            setStoredChecklist(checklistArray);
+          }
+        } catch (error) {
+          Alert.alert('체크리스트를 불러오는 중 오류가 발생했습니다.', '', [
+            { text: '확인', style: 'default' },
+          ]);
         }
-      } catch (error) {
-        Alert.alert('체크리스트를 불러오는 중 오류가 발생했습니다.', '', [
-          { text: '확인', style: 'default' },
-        ]);
-      }
-    };
+      };
 
-    getChecklist();
-  }, []);
+      getChecklist();
+    }, [])
+  );
 
   if (!imagesLoaded) {
     return (

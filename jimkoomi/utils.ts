@@ -191,8 +191,8 @@ const recommendItemsByActivity = (activities: number[]) => {
   }
 
   if (activities.includes(5)) {
+    items.push('수영복', '수건', '구명조끼', '튜브');
   }
-  items.push('수영복', '수건', '구명조끼', '튜브');
 
   if (activities.includes(6)) {
     items.push('수영복', '구명조끼', '수건');

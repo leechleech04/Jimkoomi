@@ -47,7 +47,6 @@ export const fetchWeatherData = async (
           ? daily.temperature_2m_min
           : [],
       };
-      console.log('weatherData', weatherData);
       return weatherData;
     }
   } catch (error) {
